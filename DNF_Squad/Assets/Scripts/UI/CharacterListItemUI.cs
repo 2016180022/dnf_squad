@@ -10,6 +10,8 @@ namespace DnfSquad.UI
     {
         [SerializeField] private Image portraitImage;
         [SerializeField] private TMP_Text nameText;
+        [SerializeField] private TMP_Text jobNameText;
+        [SerializeField] private TMP_Text gearScoreText;
         [SerializeField] private TMP_Text fameText;
         [SerializeField] private CanvasGroup canvasGroup;
 
@@ -23,8 +25,10 @@ namespace DnfSquad.UI
             CharacterData = data;
             dragLayer = dragLayerRoot;
 
-            portraitImage.sprite = Resources.Load<Sprite>(data.portraitImageId); // TODO: 슬롯과 동일한 로드 방식으로 통일 예정
+            portraitImage.sprite = Resources.Load<Sprite>($"Image/Portrait/{data.characterId}");
             nameText.text = data.characterName;
+            jobNameText.text = data.jobName;
+            gearScoreText.text = data.gearScore.ToString();
             fameText.text = data.fame.ToString();
 
             bool isLocked = data.remainingEntryCount <= 0;

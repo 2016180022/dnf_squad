@@ -14,7 +14,7 @@ namespace DnfSquad.Data
         public int gearScore;           // 장비점수
         public int fame;                // 명성
         public int remainingEntryCount; // 레이드 잔여 입장 횟수
-        public string portraitImageId;  // 캐릭터 전체 이미지 리소스 키
+        // portraitImageId 삭제 — Resources/Image/Portrait/{characterId} 경로로 characterId를 그대로 사용해 로드
     }
 
     /// <summary>스쿼드 스킬(공격 3종 + 지원 3종) 정의</summary>
