@@ -49,7 +49,7 @@ namespace DnfSquad.UI
         private void PopulateCharacterList()
         {
             var sorted = squadData.adventurerCharacters
-                .Where(c => c.fame >= requiredEntryFame)
+                // .Where(c => c.fame >= requiredEntryFame)
                 .OrderByDescending(c => c.fame);
 
             foreach (var character in sorted)
