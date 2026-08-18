@@ -13,6 +13,7 @@ namespace DnfSquad.UI
         [SerializeField] private TMP_Text jobNameText;
         [SerializeField] private TMP_Text gearScoreText;
         [SerializeField] private TMP_Text fameText;
+        [SerializeField] private TMP_Text entryCount;
         [SerializeField] private CanvasGroup canvasGroup;
 
         public AdventurerCharacterData CharacterData { get; private set; }
@@ -30,6 +31,7 @@ namespace DnfSquad.UI
             jobNameText.text = data.jobName;
             gearScoreText.text = data.gearScore.ToString();
             fameText.text = data.fame.ToString();
+            entryCount.text = $"{data.remainingEntryCount} / 1";
 
             bool isLocked = data.remainingEntryCount <= 0;
             if (canvasGroup != null)

@@ -35,7 +35,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 200, y: -2}
+  m_SizeDelta: {x: 185.3, y: 31.65}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4131779686991961208
 CanvasRenderer:
@@ -233,6 +233,7 @@ MonoBehaviour:
   jobNameText: {fileID: 8602218060989118261}
   gearScoreText: {fileID: 596811421612985465}
   fameText: {fileID: 6989803526604750567}
+  entryCount: {fileID: 8252058288729671923}
   canvasGroup: {fileID: 626234489016972099}
 --- !u!225 &626234489016972099
 CanvasGroup:
@@ -281,7 +282,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 200, y: -2}
+  m_SizeDelta: {x: 146.83, y: 31.65}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &347906271737705660
 CanvasRenderer:
@@ -517,7 +518,7 @@ MonoBehaviour:
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 4
-  m_Spacing: 0
+  m_Spacing: 30
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 0
@@ -560,7 +561,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 200, y: -2}
+  m_SizeDelta: {x: 115.94, y: 31.65}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &73306111973451723
 CanvasRenderer:
@@ -697,7 +698,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 200, y: -2}
+  m_SizeDelta: {x: 65.1, y: 31.65}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2304230872010316002
 CanvasRenderer:
@@ -924,7 +925,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 200, y: -2}
+  m_SizeDelta: {x: 115.94, y: 31.65}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1151482716029167843
 CanvasRenderer:
