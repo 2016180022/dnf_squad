@@ -12,7 +12,7 @@ namespace DnfSquad.UI
         [SerializeField] private TMP_Text nameText;
         [SerializeField] private TMP_Text fameText;
         [SerializeField] private GameObject emptyStatePlaceholder;
-        // warningText 삭제 — 경고 표시는 SquadConfigCanvasController의 공용 TextBox가 담당
+        [SerializeField] private TMP_Text warningText; // 슬롯 내부 경고문 — 비어있을 때만 표시
 
         public SlotRole Role { get; private set; }
         public int MemberIndex { get; private set; } = -1;
@@ -21,6 +21,7 @@ namespace DnfSquad.UI
         private SquadConfigCanvasController controller;
         private Transform dragLayer;
         private RectTransform dragGhost;
+        private string defaultWarningMessage;
 
         public void Init(SquadConfigCanvasController owner, SlotRole role, Transform dragLayerRoot, int memberIndex = -1)
         {
@@ -28,6 +29,14 @@ namespace DnfSquad.UI
             Role = role;
             dragLayer = dragLayerRoot;
             MemberIndex = memberIndex;
+
+            defaultWarningMessage = role switch
+            {
+                SlotRole.Leader => "스쿼드 리더를 편성해주세요",
+                SlotRole.Buffer => "버퍼를 편성해주세요",
+                _ => "멤버를 편성해주세요"
+            };
+
             Clear();
         }
 
@@ -39,6 +48,7 @@ namespace DnfSquad.UI
             nameText.text = data.characterName;
             fameText.text = data.fame.ToString();
             emptyStatePlaceholder.SetActive(false);
+            warningText.gameObject.SetActive(false);
         }
 
         public void Clear()
@@ -49,6 +59,20 @@ namespace DnfSquad.UI
             nameText.text = string.Empty;
             fameText.text = string.Empty;
             emptyStatePlaceholder.SetActive(true);
+            warningText.text = defaultWarningMessage;
+            warningText.gameObject.SetActive(true);
+        }
+
+        /// <summary>멤버 슬롯 동기화용 — 비어있는 상태에서 문구만 교체 (활성/비활성은 그대로 유지)</summary>
+        public void SetWarningMessage(string message)
+        {
+            warningText.text = message;
+        }
+
+        /// <summary>기본 문구("~를 편성해주세요")로 복귀</summary>
+        public void ResetWarningMessage()
+        {
+            warningText.text = defaultWarningMessage;
         }
 
         public void OnBeginDrag(PointerEventData eventData)

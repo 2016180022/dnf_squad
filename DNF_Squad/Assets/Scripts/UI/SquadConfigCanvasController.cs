@@ -29,8 +29,8 @@ namespace DnfSquad.UI
 
         [Header("하단")]
         [SerializeField] private Button confirmButton;
-        [SerializeField] private GameObject warningTextBox; // 표시/숨김 대상 루트
-        [SerializeField] private TMP_Text warningText;      // 실제 문구가 들어가는 텍스트
+        [SerializeField] private GameObject globalWarningBox;   // 검증 실패 팝업 루트 (확인 버튼으로 닫힘)
+        [SerializeField] private TMP_Text globalWarningText;
 
         [Header("씬 흐름")]
         [SerializeField] private DnfSquad.Scene.SettingSceneFlowController flowController;
@@ -65,11 +65,11 @@ namespace DnfSquad.UI
 
             if (!SquadValidationService.CanAssign(squadData.runtimeState.composition, slot.Role, character, requiredFame, out string error))
             {
-                ShowWarning(error);
+                ShowGlobalWarning(error);
                 return;
             }
 
-            HideWarning();
+            HideGlobalWarning();
             ApplyAssignment(slot, character.characterId);
             slot.AssignCharacter(character);
 
@@ -107,11 +107,11 @@ namespace DnfSquad.UI
                 if (!SquadValidationService.CanAssign(squadData.runtimeState.composition, targetSlot.Role, sourceCharacter, targetRequiredFame, out string moveError))
                 {
                     ApplyAssignment(sourceSlot, sourceCharacterId); // 원위치 복구
-                    ShowWarning(moveError);
+                    ShowGlobalWarning(moveError);
                     return;
                 }
 
-                HideWarning();
+                HideGlobalWarning();
                 ApplyAssignment(targetSlot, sourceCharacterId);
                 targetSlot.AssignCharacter(sourceCharacter);
                 sourceSlot.Clear();
@@ -130,11 +130,11 @@ namespace DnfSquad.UI
                 {
                     ApplyAssignment(sourceSlot, sourceCharacterId); // 원상 복구
                     ApplyAssignment(targetSlot, targetCharacterId);
-                    ShowWarning(!sourceIntoTargetOk ? errorA : errorB);
+                    ShowGlobalWarning(!sourceIntoTargetOk ? errorA : errorB);
                     return;
                 }
 
-                HideWarning();
+                HideGlobalWarning();
                 ApplyAssignment(sourceSlot, targetCharacterId);
                 ApplyAssignment(targetSlot, sourceCharacterId);
                 sourceSlot.AssignCharacter(targetCharacter);
@@ -150,7 +150,7 @@ namespace DnfSquad.UI
         {
             ApplyAssignment(slot, null);
             slot.Clear();
-            HideWarning();
+            HideGlobalWarning();
             RefreshMemberWarning();
             RefreshConfirmButtonState();
         }
@@ -179,21 +179,39 @@ namespace DnfSquad.UI
             var comp = squadData.runtimeState.composition;
             bool member1Filled = !string.IsNullOrEmpty(comp.memberCharacterIds[0]);
             bool member2Filled = !string.IsNullOrEmpty(comp.memberCharacterIds[1]);
-            const string warning = "멤버를 추가로 구성하지 않을 경우 던전 클리어가 어려울 수 있습니다";
+            const string syncMessage = "멤버를 추가로 구성하지 않을 경우 던전 클리어가 어려울 수 있습니다";
 
-            if (member1Filled != member2Filled) ShowWarning(warning);
-            else HideWarning();
+            if (member1Filled && !member2Filled)
+            {
+                memberSlot2.SetWarningMessage(syncMessage);
+            }
+            else if (!member1Filled && member2Filled)
+            {
+                memberSlot1.SetWarningMessage(syncMessage);
+            }
+            else
+            {
+                // 양쪽 다 비었거나 양쪽 다 채워짐 → 기본 문구로 복귀 (채워진 쪽은 어차피 비활성 상태라 무관)
+                memberSlot1.ResetWarningMessage();
+                memberSlot2.ResetWarningMessage();
+            }
         }
 
-        private void ShowWarning(string message)
+        private void ShowGlobalWarning(string message)
         {
-            warningText.text = message;
-            warningTextBox.SetActive(true);
+            globalWarningText.text = message;
+            globalWarningBox.SetActive(true);
         }
 
-        private void HideWarning()
+        private void HideGlobalWarning()
         {
-            warningTextBox.SetActive(false);
+            globalWarningBox.SetActive(false);
+        }
+
+        /// <summary>글로벌 워닝 팝업 내부의 확인 버튼에 연결</summary>
+        public void OnGlobalWarningConfirmClicked()
+        {
+            HideGlobalWarning();
         }
 
         private void RefreshConfirmButtonState()

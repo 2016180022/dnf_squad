@@ -951,8 +951,8 @@ MonoBehaviour:
   listItemPrefab: {fileID: 1334662643954366072, guid: c6a9589a99395e348844eb5a7cb739d8, type: 3}
   dragLayer: {fileID: 2037445227}
   confirmButton: {fileID: 282697694}
-  warningTextBox: {fileID: 1497890359}
-  warningText: {fileID: 794666042}
+  globalWarningBox: {fileID: 1497890359}
+  globalWarningText: {fileID: 794666042}
   flowController: {fileID: 1828632976}
 --- !u!1 &441749486
 GameObject:
@@ -1578,6 +1578,7 @@ MonoBehaviour:
   nameText: {fileID: 205525187}
   fameText: {fileID: 280373295}
   emptyStatePlaceholder: {fileID: 1134742940}
+  warningText: {fileID: 731774661}
 --- !u!114 &527713143
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1901,6 +1902,7 @@ MonoBehaviour:
   nameText: {fileID: 933191434}
   fameText: {fileID: 854081260}
   emptyStatePlaceholder: {fileID: 1134742940}
+  warningText: {fileID: 1042475001}
 --- !u!114 &603559584
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2081,6 +2083,7 @@ MonoBehaviour:
   nameText: {fileID: 1787442016}
   fameText: {fileID: 2072984556}
   emptyStatePlaceholder: {fileID: 1134742940}
+  warningText: {fileID: 1395084619}
 --- !u!114 &701481086
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2415,7 +2418,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 772794800}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 419725742}
+        m_TargetAssemblyTypeName: DnfSquad.UI.SquadConfigCanvasController, Assembly-CSharp
+        m_MethodName: OnGlobalWarningConfirmClicked
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &772794800
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3643,7 +3658,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.ScrollRect
   m_Content: {fileID: 1418772494}
-  m_Horizontal: 1
+  m_Horizontal: 0
   m_Vertical: 1
   m_MovementType: 1
   m_Elasticity: 0.1
@@ -4396,6 +4411,7 @@ MonoBehaviour:
   nameText: {fileID: 2042478879}
   fameText: {fileID: 499093861}
   emptyStatePlaceholder: {fileID: 1134742940}
+  warningText: {fileID: 1352004456}
 --- !u!114 &1777218242
 MonoBehaviour:
   m_ObjectHideFlags: 0
