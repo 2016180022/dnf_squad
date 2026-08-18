@@ -37,10 +37,10 @@ namespace DnfSquad.UI
 
         private void Start()
         {
-            leaderSlot.Init(this, SlotRole.Leader);
-            bufferSlot.Init(this, SlotRole.Buffer);
-            memberSlot1.Init(this, SlotRole.Member, 0);
-            memberSlot2.Init(this, SlotRole.Member, 1);
+            leaderSlot.Init(this, SlotRole.Leader, dragLayer);
+            bufferSlot.Init(this, SlotRole.Buffer, dragLayer);
+            memberSlot1.Init(this, SlotRole.Member, dragLayer, 0);
+            memberSlot2.Init(this, SlotRole.Member, dragLayer, 1);
 
             PopulateCharacterList();
             RefreshFromRuntimeState();
@@ -86,6 +86,73 @@ namespace DnfSquad.UI
                 case SlotRole.Buffer: comp.bufferCharacterId = characterId; break;
                 case SlotRole.Member: comp.memberCharacterIds[slot.MemberIndex] = characterId; break;
             }
+        }
+
+        /// <summary>슬롯에서 슬롯으로 드래그했을 때 이동(빈 슬롯) 또는 스왑(채워진 슬롯)을 시도</summary>
+        public void TrySwapOrMove(CharacterSlotUI sourceSlot, CharacterSlotUI targetSlot)
+        {
+            string sourceCharacterId = sourceSlot.AssignedCharacterId;
+            if (string.IsNullOrEmpty(sourceCharacterId)) return;
+
+            var sourceCharacter = squadData.GetCharacter(sourceCharacterId);
+            string targetCharacterId = targetSlot.AssignedCharacterId;
+            int sourceRequiredFame = sourceSlot.Role == SlotRole.Leader ? requiredLeaderFame : requiredEntryFame;
+            int targetRequiredFame = targetSlot.Role == SlotRole.Leader ? requiredLeaderFame : requiredEntryFame;
+
+            if (string.IsNullOrEmpty(targetCharacterId))
+            {
+                // 빈 슬롯으로 이동: 기존 CanAssign 재사용
+                ApplyAssignment(sourceSlot, null);
+
+                if (!SquadValidationService.CanAssign(squadData.runtimeState.composition, targetSlot.Role, sourceCharacter, targetRequiredFame, out string moveError))
+                {
+                    ApplyAssignment(sourceSlot, sourceCharacterId); // 원위치 복구
+                    ShowWarning(moveError);
+                    return;
+                }
+
+                HideWarning();
+                ApplyAssignment(targetSlot, sourceCharacterId);
+                targetSlot.AssignCharacter(sourceCharacter);
+                sourceSlot.Clear();
+            }
+            else
+            {
+                // 스왑: 두 슬롯을 임시로 비운 뒤 서로의 자리에 들어갈 수 있는지 양방향 검사
+                var targetCharacter = squadData.GetCharacter(targetCharacterId);
+                ApplyAssignment(sourceSlot, null);
+                ApplyAssignment(targetSlot, null);
+
+                bool sourceIntoTargetOk = SquadValidationService.CanAssign(squadData.runtimeState.composition, targetSlot.Role, sourceCharacter, targetRequiredFame, out string errorA);
+                bool targetIntoSourceOk = SquadValidationService.CanAssign(squadData.runtimeState.composition, sourceSlot.Role, targetCharacter, sourceRequiredFame, out string errorB);
+
+                if (!sourceIntoTargetOk || !targetIntoSourceOk)
+                {
+                    ApplyAssignment(sourceSlot, sourceCharacterId); // 원상 복구
+                    ApplyAssignment(targetSlot, targetCharacterId);
+                    ShowWarning(!sourceIntoTargetOk ? errorA : errorB);
+                    return;
+                }
+
+                HideWarning();
+                ApplyAssignment(sourceSlot, targetCharacterId);
+                ApplyAssignment(targetSlot, sourceCharacterId);
+                sourceSlot.AssignCharacter(targetCharacter);
+                targetSlot.AssignCharacter(sourceCharacter);
+            }
+
+            RefreshMemberWarning();
+            RefreshConfirmButtonState();
+        }
+
+        /// <summary>슬롯이 아닌 빈 공간으로 드래그해서 놓았을 때 배치 해제</summary>
+        public void TryUnassignCharacter(CharacterSlotUI slot)
+        {
+            ApplyAssignment(slot, null);
+            slot.Clear();
+            HideWarning();
+            RefreshMemberWarning();
+            RefreshConfirmButtonState();
         }
 
         private void RefreshFromRuntimeState()

@@ -51,15 +51,57 @@ namespace DnfSquad.UI
             emptyStatePlaceholder.SetActive(true);
         }
 
-        public void OnDrop(PointerEventData eventData)
+        public void OnBeginDrag(PointerEventData eventData)
         {
-            var draggedItem = eventData.pointerDrag != null
-                ? eventData.pointerDrag.GetComponent<CharacterListItemUI>()
+            if (string.IsNullOrEmpty(AssignedCharacterId)) return; // 빈 슬롯은 드래그 불가
+
+            dragGhost = new GameObject("DragGhost", typeof(RectTransform), typeof(Image)).GetComponent<RectTransform>();
+            dragGhost.SetParent(dragLayer, false);
+            dragGhost.sizeDelta = ((RectTransform)portraitImage.transform).sizeDelta;
+
+            var dragGhostImage = dragGhost.GetComponent<Image>();
+            dragGhostImage.sprite = portraitImage.sprite;
+            dragGhostImage.raycastTarget = false;
+        }
+
+        public void OnDrag(PointerEventData eventData)
+        {
+            if (dragGhost != null) dragGhost.position = eventData.position;
+        }
+
+        public void OnEndDrag(PointerEventData eventData)
+        {
+            if (dragGhost != null) Destroy(dragGhost.gameObject);
+            dragGhost = null;
+
+            if (string.IsNullOrEmpty(AssignedCharacterId)) return; // OnDrop에서 이미 이동/스왑 처리되어 비워진 경우
+
+            var droppedOnSlot = eventData.pointerEnter != null
+                ? eventData.pointerEnter.GetComponentInParent<CharacterSlotUI>()
                 : null;
 
-            if (draggedItem == null || draggedItem.CharacterData == null) return;
+            if (droppedOnSlot == null)
+            {
+                controller.TryUnassignCharacter(this); // 슬롯 위가 아닌 곳에 놓으면 배치 해제
+            }
+        }
 
-            controller.TryAssignCharacter(this, draggedItem.CharacterData);
+        public void OnDrop(PointerEventData eventData)
+        {
+            if (eventData.pointerDrag == null) return;
+
+            var draggedItem = eventData.pointerDrag.GetComponent<CharacterListItemUI>();
+            if (draggedItem != null && draggedItem.CharacterData != null)
+            {
+                controller.TryAssignCharacter(this, draggedItem.CharacterData);
+                return;
+            }
+
+            var draggedSlot = eventData.pointerDrag.GetComponent<CharacterSlotUI>();
+            if (draggedSlot != null && draggedSlot != this)
+            {
+                controller.TrySwapOrMove(draggedSlot, this);
+            }
         }
     }
 }

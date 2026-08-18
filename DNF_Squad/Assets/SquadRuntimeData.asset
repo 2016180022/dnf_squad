@@ -19,43 +19,38 @@ MonoBehaviour:
     gearScore: 486155
     fame: 127365
     remainingEntryCount: 1
-    portraitImageId: 2026001
   - characterId: 2026002
     characterName: "\uC880\uC2DC\uB044\uB7EC\uC6CC\uC694"
     jobName: "\uC9C4 \uD0A4\uBA54\uB77C"
     gearScore: 313586
     fame: 123118
     remainingEntryCount: 1
-    portraitImageId: 2026002
   - characterId: 2026003
     characterName: "\uC790\uD559\uC99D\uC0C1"
     jobName: "\uC9C4 \uC0AC\uB839\uC220\uC0AC"
     gearScore: 262677
     fame: 121350
     remainingEntryCount: 0
-    portraitImageId: 2026003
   - characterId: 2026004
     characterName: "\uBCFC\uB968\uC904\uC5EC\uC918\uC694"
     jobName: "\uC9C4 \uBBA4\uC988"
     gearScore: 126278
     fame: 121936
     remainingEntryCount: 1
-    portraitImageId: 2026004
   - characterId: 2026005
     characterName: "\uD56D\uC0C1\uD568\uAED8\uD574\uC694"
     jobName: "\uC9C4 \uD5CC\uD130"
     gearScore: 1571
     fame: 74439
     remainingEntryCount: 1
-    portraitImageId: 2026005
   squadSkills: []
   squadBuffs: []
   runtimeState:
     composition:
       leaderCharacterId: 0
-      bufferCharacterId: 0
+      bufferCharacterId: 
       memberCharacterIds:
-      - 0
+      - 
       - 
     quickSlots: []
     leaderSkillChain: []
