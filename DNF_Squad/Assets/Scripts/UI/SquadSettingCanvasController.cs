@@ -1,5 +1,7 @@
 using DnfSquad.Data;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace DnfSquad.UI
 {
@@ -15,6 +17,14 @@ namespace DnfSquad.UI
         [SerializeField] private SquadSkillSlotUI[] quickSlots = new SquadSkillSlotUI[6];
         [SerializeField] private Transform dragLayer;
 
+        [Header("스킬 체인")]
+        [SerializeField] private GameObject skillChainCanvas;        // 체인 설정 UI 루트
+        [SerializeField] private GameObject skillChainViewPopup;     // 체인 확인용 작은 팝업
+        [SerializeField] private Transform skillChainViewContent;    // 팝업 내부 목록 부모
+        [SerializeField] private SkillChainStepItemUI stepItemPrefab;
+        [SerializeField] private TMP_Text skillChainTotalDamageText;
+        [SerializeField] private Button skillChainViewButton;        // "스킬 체인 확인" — 데이터 있을 때만 활성
+
         [Header("씬 흐름")]
         [SerializeField] private DnfSquad.Scene.SettingSceneFlowController flowController;
 
@@ -29,6 +39,7 @@ namespace DnfSquad.UI
 
             RefreshSkillInfoRows();
             RefreshQuickSlots();
+            RefreshSkillChainSummary();
         }
 
         /// <summary>런타임 상태에 퀵슬롯 배치가 없으면(최초 진입) squadSkills 순서 그대로 채움</summary>
@@ -85,6 +96,46 @@ namespace DnfSquad.UI
             (assignmentA.skillId, assignmentB.skillId) = (assignmentB.skillId, assignmentA.skillId);
 
             RefreshQuickSlots(); // 위 정보 목록은 배치와 무관하게 고정이므로 갱신 불필요
+        }
+
+        /// <summary>스킬 체인에서 적용한 총합 데미지를 스쿼드 세팅 화면에 동기화</summary>
+        public void RefreshSkillChainSummary()
+        {
+            long damage = squadData.runtimeState.leaderSkillChainTotalDamage;
+            bool hasChain = squadData.runtimeState.leaderSkillChain.Count > 0 && damage > 0;
+
+            skillChainTotalDamageText.text = hasChain
+                ? $"리더 스킬 체인 총합 데미지\n({damage:N0})"
+                : "리더 스킬 체인 총합 데미지\n(미설정)";
+
+            skillChainViewButton.interactable = hasChain;
+        }
+
+        /// <summary>"스쿼드 리더 스킬 체인 설정" 버튼 — 체인 설정 UI로 전환</summary>
+        public void OnOpenSkillChainClicked()
+        {
+            skillChainCanvas.SetActive(true);
+            gameObject.SetActive(false);
+        }
+
+        /// <summary>"스쿼드 리더 스킬 체인 확인" 버튼 — 저장된 순서를 팝업으로 표시 (읽기 전용)</summary>
+        public void OnViewSkillChainClicked()
+        {
+            foreach (Transform child in skillChainViewContent) Destroy(child.gameObject);
+
+            foreach (var step in squadData.runtimeState.leaderSkillChain)
+            {
+                var skill = squadData.GetSkill(step.skillId);
+                var item = Instantiate(stepItemPrefab, skillChainViewContent);
+                item.Display(step.order + 1, step.skillId, skill != null ? skill.skillName : step.skillId);
+            }
+
+            skillChainViewPopup.SetActive(true);
+        }
+
+        public void OnCloseSkillChainViewClicked()
+        {
+            skillChainViewPopup.SetActive(false);
         }
 
         /// <summary>하단 확인 버튼 — 레이드 시작</summary>

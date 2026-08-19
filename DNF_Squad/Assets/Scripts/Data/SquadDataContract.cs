@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace DnfSquad.Data
 {
@@ -83,7 +84,19 @@ namespace DnfSquad.Data
         public int order;       // 몇 번째로 실행되는지 (0부터 시작)
         public string skillId;
     }
-    // TODO: 스킬 체인 설정 기능 상세 구현 시 구조 재정리 예정 (사용자 확인 대기)
+
+    /// <summary>
+    /// 프로토타입 전용 — 리더 캐릭터 스킬의 키 바인딩.
+    /// 실제 인게임에서는 리더 캐릭터 접속 시 그 캐릭터의 스킬 배치를 그대로 가져오지만,
+    /// 프로토타입에서는 A/S/D/F 4키에 임의 매핑해서 사용한다.
+    /// </summary>
+    [System.Serializable]
+    public class LeaderSkillBinding
+    {
+        public KeyCode key;         // A / S / D / F
+        public string skillId;      // 고유 ID
+        public string skillName;    // 표시용 이름
+    }
 
     /// <summary>보유 중인 스쿼드 버프의 레벨 진행 상태</summary>
     [System.Serializable]
@@ -100,6 +113,7 @@ namespace DnfSquad.Data
         public SquadComposition composition = new SquadComposition();
         public List<QuickSlotAssignment> quickSlots = new List<QuickSlotAssignment>(6);
         public List<SkillChainStep> leaderSkillChain = new List<SkillChainStep>();
+        public long leaderSkillChainTotalDamage; // 스킬 체인 측정 결과 총합 데미지 (0 = 미설정)
         public List<SquadBuffProgress> buffProgress = new List<SquadBuffProgress>();
         public int squadPoints; // 보유 스쿼드 포인트
     }
