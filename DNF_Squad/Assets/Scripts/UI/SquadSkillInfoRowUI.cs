@@ -1,18 +1,17 @@
 using DnfSquad.Data;
 using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace DnfSquad.UI
 {
     /// <summary>
     /// 왼쪽 위 스킬 정보 목록의 한 행 — 표시 전용, 드래그 없음.
-    /// 행의 순서는 마스터 데이터 순서로 고정이고, 앞의 숫자만 현재 퀵슬롯 배치 번호로 갱신된다.
+    /// 행의 순서는 마스터 데이터 순서로 고정이며, 퀵슬롯 배치와 무관하다.
     /// </summary>
     public class SquadSkillInfoRowUI : MonoBehaviour
     {
-        [SerializeField] private TMP_Text orderText;       // 이 스킬이 배치된 퀵슬롯 번호 (1~6)
+        [SerializeField] private Image iconImage;          // 스킬 아이콘 (기존 orderText 자리)
         [SerializeField] private TMP_Text nameText;        // "전투 조력 (Lv.1)"
         [SerializeField] private TMP_Text descriptionText; // 스킬 설명
 
@@ -24,14 +23,11 @@ namespace DnfSquad.UI
         {
             if (skill == null) return;
 
+            iconImage.sprite = Resources.Load<Sprite>($"Image/Skill/{skill.skillId}");
             nameText.text = $"{skill.skillName} (Lv.{skillLevel})";
             descriptionText.text = skill.description;
         }
 
-        /// <summary>퀵슬롯 배치가 바뀔 때마다 호출 — 앞쪽 순번 숫자만 갱신</summary>
-        public void SetOrderNumber(int quickSlotNumber)
-        {
-            orderText.text = quickSlotNumber.ToString();
-        }
+        // SetOrderNumber() 삭제 — 순번 표시 대신 아이콘을 쓰므로 배치 변경 시 갱신할 필요 없음
     }
 }

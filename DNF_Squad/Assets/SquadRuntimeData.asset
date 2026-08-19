@@ -109,12 +109,24 @@ MonoBehaviour:
   squadBuffs: []
   runtimeState:
     composition:
-      leaderCharacterId: 0
-      bufferCharacterId: 
+      leaderCharacterId: 2026001
+      bufferCharacterId: 2026004
       memberCharacterIds:
+      - 2026002
       - 
-      - 
-    quickSlots: []
+    quickSlots:
+    - slotIndex: 0
+      skillId: 26001
+    - slotIndex: 1
+      skillId: 26002
+    - slotIndex: 2
+      skillId: 26003
+    - slotIndex: 3
+      skillId: 26004
+    - slotIndex: 4
+      skillId: 26005
+    - slotIndex: 5
+      skillId: 26006
     leaderSkillChain: []
     buffProgress: []
     squadPoints: 0

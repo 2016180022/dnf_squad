@@ -46,6 +46,8 @@ namespace DnfSquad.UI
 
         public void OnBeginDrag(PointerEventData eventData)
         {
+            dragLayer.SetAsLastSibling(); // 하이어라키 순서가 틀어져도 고스트가 항상 최상단에 그려지도록 보장
+
             dragGhost = new GameObject("DragGhost", typeof(RectTransform), typeof(Image)).GetComponent<RectTransform>();
             dragGhost.SetParent(dragLayer, false);
             dragGhost.sizeDelta = ((RectTransform)transform).sizeDelta;

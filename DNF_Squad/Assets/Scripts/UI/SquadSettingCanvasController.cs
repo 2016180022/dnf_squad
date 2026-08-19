@@ -47,8 +47,8 @@ namespace DnfSquad.UI
         }
 
         /// <summary>
-        /// 왼쪽 위 정보 목록 갱신. 행 순서는 마스터 데이터 순서로 고정이고,
-        /// 각 행 앞의 숫자만 현재 퀵슬롯 배치 위치로 동기화된다.
+        /// 왼쪽 위 정보 목록 갱신. 행 순서는 마스터 데이터 순서로 고정이며,
+        /// 퀵슬롯 배치 변경과는 무관하다.
         /// </summary>
         private void RefreshSkillInfoRows()
         {
@@ -58,15 +58,7 @@ namespace DnfSquad.UI
 
                 // TODO: 버프 강화 시스템 구현 후 buffProgress 기반 레벨 계산으로 교체 (현재는 1 고정)
                 skillInfoRows[i].Display(skill, 1);
-                skillInfoRows[i].SetOrderNumber(FindQuickSlotNumber(skill.skillId));
             }
-        }
-
-        /// <summary>해당 스킬이 배치된 퀵슬롯의 표시 번호(1~6)를 반환. 미배치 시 0</summary>
-        private int FindQuickSlotNumber(string skillId)
-        {
-            var assignment = squadData.runtimeState.quickSlots.Find(a => a.skillId == skillId);
-            return assignment != null ? assignment.slotIndex + 1 : 0;
         }
 
         private void RefreshQuickSlots()
@@ -92,8 +84,7 @@ namespace DnfSquad.UI
 
             (assignmentA.skillId, assignmentB.skillId) = (assignmentB.skillId, assignmentA.skillId);
 
-            RefreshQuickSlots();
-            RefreshSkillInfoRows(); // 배치가 바뀌었으니 위 목록의 순번 숫자도 동기화
+            RefreshQuickSlots(); // 위 정보 목록은 배치와 무관하게 고정이므로 갱신 불필요
         }
 
         /// <summary>하단 확인 버튼 — 레이드 시작</summary>
