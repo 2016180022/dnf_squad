@@ -15,8 +15,10 @@ namespace DnfSquad.UI
         [SerializeField] private LeaderSkillBinding[] leaderSkillBindings = new LeaderSkillBinding[4];
 
         [Header("스킬 사용 순서 목록")]
-        [SerializeField] private Transform stepListContent;
-        [SerializeField] private SkillChainStepItemUI stepItemPrefab;
+        [SerializeField] private SkillChainListViewUI stepListView;
+
+        [Header("리더 스킬 입력 칸 아이콘 (A/S/D/F 순서로 연결)")]
+        [SerializeField] private Image[] leaderSkillIcons = new Image[4];
 
         [Header("표시")]
         [SerializeField] private TMP_Text timerText;
@@ -30,12 +32,13 @@ namespace DnfSquad.UI
         [SerializeField] private Button exitButton;     // 나가기
 
         [Header("씬 흐름")]
+        [SerializeField] private GameObject skillChainCanvasRoot;
         [SerializeField] private SquadSettingCanvasController settingCanvasController;
 
         private const float CycleSeconds = 10f;
 
+        // 생성된 아이콘은 리스트 뷰가 직접 관리하므로 별도 추적 불필요
         private readonly List<SkillChainStep> recordedSteps = new List<SkillChainStep>();
-        private readonly List<SkillChainStepItemUI> spawnedItems = new List<SkillChainStepItemUI>();
 
         private bool isMeasuring;
         private float remainingSeconds;
@@ -45,8 +48,30 @@ namespace DnfSquad.UI
 
         private void OnEnable()
         {
+            RefreshLeaderSkillIcons();
             LoadFromRuntimeState();
             RefreshButtonStates();
+        }
+
+        /// <summary>A/S/D/F 입력 칸에 배치된 스킬 아이콘 표시</summary>
+        private void RefreshLeaderSkillIcons()
+        {
+            for (int i = 0; i < leaderSkillIcons.Length && i < leaderSkillBindings.Length; i++)
+            {
+                var binding = leaderSkillBindings[i];
+                var icon = leaderSkillIcons[i];
+                if (icon == null) continue;
+
+                if (binding == null || string.IsNullOrEmpty(binding.skillId))
+                {
+                    icon.enabled = false;
+                    continue;
+                }
+
+                icon.sprite = Resources.Load<Sprite>($"Image/Skill/{binding.skillId}");
+                icon.preserveAspect = true;
+                icon.enabled = icon.sprite != null;
+            }
         }
 
         private void Update()
@@ -87,9 +112,7 @@ namespace DnfSquad.UI
             };
             recordedSteps.Add(step);
 
-            var item = Instantiate(stepItemPrefab, stepListContent);
-            item.Display(step.order + 1, binding.skillId, binding.skillName);
-            spawnedItems.Add(item);
+            stepListView.AddIcon(binding.skillId);
         }
 
         /// <summary>소환 버튼 — 기존 데이터를 초기화하고 10초 측정 시작</summary>
@@ -143,9 +166,8 @@ namespace DnfSquad.UI
         private void CloseCanvas()
         {
             isMeasuring = false;
-            gameObject.SetActive(false);
-            settingCanvasController.gameObject.SetActive(true);
-            settingCanvasController.RefreshSkillChainSummary();
+            skillChainCanvasRoot.SetActive(false);
+            settingCanvasController.ShowCanvas(); // 스쿼드 세팅 캔버스 재활성화 + 총합 데미지 갱신
         }
 
         private void RefreshButtonStates()
@@ -164,9 +186,7 @@ namespace DnfSquad.UI
         private void ClearRecordedData()
         {
             recordedSteps.Clear();
-
-            foreach (var item in spawnedItems) Destroy(item.gameObject);
-            spawnedItems.Clear();
+            stepListView.Clear();
 
             totalDamage = 0;
             totalDamageText.text = "총합 데미지 : -";
@@ -182,15 +202,8 @@ namespace DnfSquad.UI
             var savedChain = squadData.runtimeState.leaderSkillChain;
             if (savedChain.Count == 0) return;
 
-            foreach (var step in savedChain)
-            {
-                recordedSteps.Add(step);
-
-                var binding = System.Array.Find(leaderSkillBindings, b => b != null && b.skillId == step.skillId);
-                var item = Instantiate(stepItemPrefab, stepListContent);
-                item.Display(step.order + 1, step.skillId, binding != null ? binding.skillName : step.skillId);
-                spawnedItems.Add(item);
-            }
+            recordedSteps.AddRange(savedChain);
+            stepListView.Show(savedChain);
 
             totalDamage = squadData.runtimeState.leaderSkillChainTotalDamage;
             if (totalDamage > 0) totalDamageText.text = $"총합 데미지 : {totalDamage:N0}";

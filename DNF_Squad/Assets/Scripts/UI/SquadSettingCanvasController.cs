@@ -18,10 +18,10 @@ namespace DnfSquad.UI
         [SerializeField] private Transform dragLayer;
 
         [Header("스킬 체인")]
+        [SerializeField] private GameObject settingCanvasRoot;       // 이 캔버스의 루트 오브젝트
         [SerializeField] private GameObject skillChainCanvas;        // 체인 설정 UI 루트
         [SerializeField] private GameObject skillChainViewPopup;     // 체인 확인용 작은 팝업
-        [SerializeField] private Transform skillChainViewContent;    // 팝업 내부 목록 부모
-        [SerializeField] private SkillChainStepItemUI stepItemPrefab;
+        [SerializeField] private SkillChainListViewUI skillChainViewList; // 팝업 내부 목록 뷰
         [SerializeField] private TMP_Text skillChainTotalDamageText;
         [SerializeField] private Button skillChainViewButton;        // "스킬 체인 확인" — 데이터 있을 때만 활성
 
@@ -115,21 +115,26 @@ namespace DnfSquad.UI
         public void OnOpenSkillChainClicked()
         {
             skillChainCanvas.SetActive(true);
-            gameObject.SetActive(false);
+            settingCanvasRoot.SetActive(false);
         }
 
-        /// <summary>"스쿼드 리더 스킬 체인 확인" 버튼 — 저장된 순서를 팝업으로 표시 (읽기 전용)</summary>
+        /// <summary>체인 설정 UI에서 복귀할 때 호출 — 이 캔버스를 다시 켜고 요약 갱신</summary>
+        public void ShowCanvas()
+        {
+            settingCanvasRoot.SetActive(true);
+            RefreshSkillChainSummary();
+        }
+
+        /// <summary>"스쿼드 리더 스킬 체인 확인" 버튼 — 토글 방식 (한 번 더 누르면 닫힘)</summary>
         public void OnViewSkillChainClicked()
         {
-            foreach (Transform child in skillChainViewContent) Destroy(child.gameObject);
-
-            foreach (var step in squadData.runtimeState.leaderSkillChain)
+            if (skillChainViewPopup.activeSelf)
             {
-                var skill = squadData.GetSkill(step.skillId);
-                var item = Instantiate(stepItemPrefab, skillChainViewContent);
-                item.Display(step.order + 1, step.skillId, skill != null ? skill.skillName : step.skillId);
+                skillChainViewPopup.SetActive(false);
+                return;
             }
 
+            skillChainViewList.Show(squadData.runtimeState.leaderSkillChain);
             skillChainViewPopup.SetActive(true);
         }
 
