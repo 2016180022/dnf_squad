@@ -31,7 +31,9 @@ namespace DnfSquad.Data
         public string usableConditionNote;    // 사용 조건 설명 (임시 텍스트)
         // TODO: PlayScene 개발 시 환경 변수 기반 Flag/임계값 비교 로직으로 대체 예정.
         // 예: 특정 변수가 기준치 미만일 때만 사용 가능 등 — 지금은 상세 조건 미확정, 텍스트로만 기록.
-        public string description;
+        // description → descriptionTemplate + baseValues 로 분리 (버프로 수치가 변경되므로)
+        public string descriptionTemplate; // 예: "스쿼드 리더가 등장하여 스킬 체인대로 공격한다\n쿨타임 {0}초"
+        public float[] baseValues;         // 템플릿의 {0}, {1}... 자리에 들어갈 버프 미적용 기본 수치
     }
 
     /// <summary>스쿼드 버프(보조/강화 요소) 정의</summary>
@@ -44,7 +46,21 @@ namespace DnfSquad.Data
         public SquadBuffSlotType slotType;   // Active(액티브) / Passive(패시브)
         public string descriptionTemplate;   // 예: "모든 겁화 증가량을 {0}% 감소시킨다" — {0} 자리를 UI에서 강조색 처리
         public SquadBuffLevelData[] levels;  // 레벨별 수치 및 부가 효과
+        public SquadBuffEffect[] effects;    // 이 버프가 어떤 스킬의 무엇을 바꾸는지
         // maxLevel 삭제 — 모든 버프가 동일하므로 SquadRuntimeData.buffLevelConfig에서 공용 관리
+    }
+
+    /// <summary>버프가 스쿼드 스킬에 적용하는 효과 1건</summary>
+    [System.Serializable]
+    public class SquadBuffEffect
+    {
+        public string targetSkillId;        // 영향을 줄 스킬
+        public SkillTargetType targetType;  // 무엇을 바꾸는지
+        [Tooltip("DescriptionValue일 때만 사용 — 스킬 baseValues의 인덱스")]
+        public int targetValueIndex;
+        [Tooltip("이 버프 effectValues의 몇 번째 수치를 쓸지")]
+        public int effectValueIndex;
+        public BuffOperation operation;
     }
 
     /// <summary>
@@ -91,6 +107,17 @@ namespace DnfSquad.Data
     public enum SquadSkillType { Attack, Support }
     public enum SquadBuffCategory { Assist, Enhance }
     public enum SquadBuffSlotType { Active, Passive }
+
+    /// <summary>버프가 스킬의 무엇을 대상으로 하는지</summary>
+    public enum SkillTargetType
+    {
+        DescriptionValue, // 설명문 수치 (baseValues[targetValueIndex])
+        Cooldown,         // 쿨타임 초
+        MaxUses,          // 레이드 내 최대 사용 횟수
+        SkillLevel        // 스킬 레벨 표기 (기본 1)
+    }
+
+    public enum BuffOperation { Add, Subtract, Multiply, Override }
 
     // ========== 런타임 상태 (SO가 감쌀 대상, 플레이어별로 값이 채워짐) ==========
 

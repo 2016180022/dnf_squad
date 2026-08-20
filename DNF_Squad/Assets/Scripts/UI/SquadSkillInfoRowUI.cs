@@ -12,20 +12,20 @@ namespace DnfSquad.UI
     public class SquadSkillInfoRowUI : MonoBehaviour
     {
         [SerializeField] private Image iconImage;          // 스킬 아이콘 (기존 orderText 자리)
-        [SerializeField] private TMP_Text nameText;        // "전투 조력 (Lv.1)"
+        [SerializeField] private TMP_Text nameText;        // "전투 조력"
         [SerializeField] private TMP_Text descriptionText; // 스킬 설명
 
         /// <summary>
-        /// 스킬 정보를 표시. skillLevel은 이후 버프 강화 시스템이 붙으면
-        /// buffProgress 기반으로 계산된 값이 넘어오도록 교체될 예정 (현재는 1 고정).
+        /// 스킬 정보를 표시. 설명문은 버프가 반영된 값이 넘어온다.
+        /// (레벨 표기는 폐기 — 스킬 기본 레벨 1과 버프 기본 레벨 0이 맞지 않아 혼란을 줌)
         /// </summary>
-        public void Display(SquadSkillData skill, int skillLevel)
+        public void Display(SquadSkillData skill, string description)
         {
             if (skill == null) return;
 
             iconImage.sprite = Resources.Load<Sprite>($"Image/Skill/{skill.skillId}");
-            nameText.text = $"{skill.skillName} (Lv.{skillLevel})";
-            descriptionText.text = skill.description;
+            nameText.text = skill.skillName;
+            descriptionText.text = description;
         }
 
         // SetOrderNumber() 삭제 — 순번 표시 대신 아이콘을 쓰므로 배치 변경 시 갱신할 필요 없음

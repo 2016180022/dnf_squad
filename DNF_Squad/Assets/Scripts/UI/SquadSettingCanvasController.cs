@@ -1,4 +1,5 @@
 using DnfSquad.Data;
+using DnfSquad.Logic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -26,6 +27,7 @@ namespace DnfSquad.UI
         [SerializeField] private Button skillChainViewButton;        // "스킬 체인 확인" — 데이터 있을 때만 활성
 
         [Header("씬 흐름")]
+        [SerializeField] private Button confirmButton;               // 하단 "확인" — 스킬 체인 설정 시에만 활성
         [SerializeField] private DnfSquad.Scene.SettingSceneFlowController flowController;
 
         private void OnEnable()
@@ -60,15 +62,17 @@ namespace DnfSquad.UI
         /// <summary>
         /// 왼쪽 위 정보 목록 갱신. 행 순서는 마스터 데이터 순서로 고정이며,
         /// 퀵슬롯 배치 변경과는 무관하다.
+        /// 설명문은 버프가 반영된 값을 서비스에서 계산해 넘긴다.
         /// </summary>
-        private void RefreshSkillInfoRows()
+        public void RefreshSkillInfoRows()
         {
             for (int i = 0; i < skillInfoRows.Length && i < squadData.squadSkills.Count; i++)
             {
                 var skill = squadData.squadSkills[i];
 
-                // TODO: 버프 강화 시스템 구현 후 buffProgress 기반 레벨 계산으로 교체 (현재는 1 고정)
-                skillInfoRows[i].Display(skill, 1);
+                string desc = SquadSkillStatService.BuildSkillDescription(squadData, skill.skillId);
+
+                skillInfoRows[i].Display(skill, desc);
             }
         }
 
@@ -109,6 +113,9 @@ namespace DnfSquad.UI
                 : "리더 스킬 체인 총합 데미지\n(미설정)";
 
             skillChainViewButton.interactable = hasChain;
+
+            // 리더 스킬 체인이 설정된 경우에만 레이드 시작 가능
+            confirmButton.interactable = hasChain;
         }
 
         /// <summary>"스쿼드 리더 스킬 체인 설정" 버튼 — 체인 설정 UI로 전환</summary>

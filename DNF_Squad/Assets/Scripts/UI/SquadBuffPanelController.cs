@@ -37,6 +37,10 @@ namespace DnfSquad.UI
         [SerializeField] private Image ingredientIconImage;
         [SerializeField] private TMP_Text ingredientCountText;
 
+        [Header("연동")]
+        [Tooltip("버프 레벨 변경 시 왼쪽 스킬 정보 목록을 다시 그리기 위해 참조")]
+        [SerializeField] private SquadSettingCanvasController settingCanvasController;
+
         private readonly List<SquadBuffSlotUI> spawnedSlots = new List<SquadBuffSlotUI>();
         private SquadBuffSlotUI selectedSlot;
 
@@ -116,6 +120,9 @@ namespace DnfSquad.UI
             RefreshSlots();
             RefreshDescription();
             RefreshLevelAndPoints();
+
+            // 버프 레벨이 바뀌면 왼쪽 스킬 정보의 수치/레벨/부가설명도 함께 갱신
+            if (settingCanvasController != null) settingCanvasController.RefreshSkillInfoRows();
         }
 
         private void RefreshSlots()
@@ -144,6 +151,7 @@ namespace DnfSquad.UI
         /// <summary>
         /// 설명문 조립. 레벨과 무관하게 항상 동일한 고정 설명을 보여준다.
         /// 템플릿의 {0}, {1}... 자리에는 각 레벨의 수치를 "3/4/5" 형태로 이어붙인다.
+        /// 부가 설명은 "N레벨 달성 시, " 접두어를 코드에서 붙여 표시한다.
         /// </summary>
         private string BuildDescription(SquadBuffData buff)
         {
@@ -154,7 +162,9 @@ namespace DnfSquad.UI
             foreach (var levelData in buff.levels)
             {
                 if (string.IsNullOrEmpty(levelData.bonusDescriptionTemplate)) continue;
-                text += "\n\n" + FormatTemplate(levelData.bonusDescriptionTemplate, buff);
+
+                var bonus = FormatTemplate(levelData.bonusDescriptionTemplate, buff);
+                text += $"\n\n{levelData.level}레벨 달성 시, {bonus}";
             }
 
             return text;
