@@ -12,6 +12,13 @@ namespace DnfSquad.Data
         public List<SquadSkillData> squadSkills = new List<SquadSkillData>();
         public List<SquadBuffData> squadBuffs = new List<SquadBuffData>();
 
+        [Header("스쿼드 버프 공용 레벨 설정 (모든 버프가 동일하게 사용)")]
+        public SquadBuffLevelConfig buffLevelConfig = new SquadBuffLevelConfig();
+
+        [Header("아이템 리소스")]
+        [Tooltip("Resources/Image/Item/ 아래의 파일명 (확장자 제외)")]
+        public string raidIngredientImageId = "RaidIngredient";
+
         [Header("런타임 상태 (플레이어가 세팅, 저장/복원 대상)")]
         public SquadRuntimeState runtimeState = new SquadRuntimeState();
 
@@ -30,6 +37,27 @@ namespace DnfSquad.Data
         public SquadBuffData GetBuff(string buffId)
         {
             return squadBuffs.FirstOrDefault(b => b.buffId == buffId);
+        }
+
+        // ===== 버프 진행 상태 헬퍼 =====
+
+        /// <summary>해당 버프의 현재 레벨 (0 = 미습득)</summary>
+        public int GetBuffLevel(string buffId)
+        {
+            var progress = runtimeState.buffProgress.FirstOrDefault(p => p.buffId == buffId);
+            return progress?.currentLevel ?? 0;
+        }
+
+        /// <summary>해당 버프의 레벨을 설정. 항목이 없으면 새로 추가한다.</summary>
+        public void SetBuffLevel(string buffId, int level)
+        {
+            var progress = runtimeState.buffProgress.FirstOrDefault(p => p.buffId == buffId);
+            if (progress == null)
+            {
+                progress = new SquadBuffProgress { buffId = buffId };
+                runtimeState.buffProgress.Add(progress);
+            }
+            progress.currentLevel = level;
         }
 
         // ===== 초기화 =====

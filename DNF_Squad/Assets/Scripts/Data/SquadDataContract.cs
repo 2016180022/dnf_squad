@@ -15,6 +15,7 @@ namespace DnfSquad.Data
         public int gearScore;           // 장비점수
         public int fame;                // 명성
         public int remainingEntryCount; // 레이드 잔여 입장 횟수
+        public int ingredientCount;     // 이 캐릭터가 보유 중인 레이드 재료 개수
         // portraitImageId 삭제 — Resources/Image/Portrait/{characterId} 경로로 characterId를 그대로 사용해 로드
     }
 
@@ -40,23 +41,56 @@ namespace DnfSquad.Data
         public string buffId;
         public string buffName;
         public SquadBuffCategory category;   // Assist(보조) / Enhance(강화)
-        public int maxLevel;                 // 최대 3레벨
+        public SquadBuffSlotType slotType;   // Active(액티브) / Passive(패시브)
         public string descriptionTemplate;   // 예: "모든 겁화 증가량을 {0}% 감소시킨다" — {0} 자리를 UI에서 강조색 처리
-        public SquadBuffLevelData[] levels;  // 레벨별 수치 및 포인트
+        public SquadBuffLevelData[] levels;  // 레벨별 수치 및 부가 효과
+        // maxLevel 삭제 — 모든 버프가 동일하므로 SquadRuntimeData.buffLevelConfig에서 공용 관리
     }
 
-    /// <summary>스쿼드 버프의 레벨별 수치/비용/부가 효과</summary>
+    /// <summary>
+    /// 모든 스쿼드 버프가 공유하는 레벨 설정.
+    /// 최대 레벨과 레벨업 비용은 버프별로 다르지 않으므로 한 곳에서 관리한다.
+    /// </summary>
+    [System.Serializable]
+    public class SquadBuffLevelConfig
+    {
+        public int maxLevel = 3;
+        [Tooltip("인덱스 0 = 1레벨 도달 비용, 1 = 2레벨 도달 비용, ...")]
+        public int[] pointCosts = new int[3];
+
+        /// <summary>currentLevel에서 다음 레벨로 올릴 때 드는 비용</summary>
+        public int GetLevelUpCost(int currentLevel)
+        {
+            if (pointCosts == null || currentLevel < 0 || currentLevel >= pointCosts.Length) return 0;
+            return pointCosts[currentLevel];
+        }
+
+        /// <summary>currentLevel까지 투입한 포인트 총합 (초기화 시 반환량)</summary>
+        public int GetSpentPoints(int currentLevel)
+        {
+            if (pointCosts == null) return 0;
+
+            int sum = 0;
+            for (int i = 0; i < currentLevel && i < pointCosts.Length; i++) sum += pointCosts[i];
+            return sum;
+        }
+    }
+
+    /// <summary>스쿼드 버프의 레벨별 수치/부가 효과</summary>
     [System.Serializable]
     public class SquadBuffLevelData
     {
         public int level;            // 1~3
         public float[] effectValues; // 템플릿의 {0}, {1}... 자리에 들어갈 수치 (예: 10 / 20 / 30)
-        public int pointCost;        // 이 레벨 도달에 필요한 스쿼드 포인트
-        public string bonusDescriptionTemplate; // 값이 있으면 해당 레벨 달성 시 Description에 추가 노출 (예: 3레벨 전용 부가 효과)
+        // TODO: 버프→스킬 연동 작업 시 스킬 Desc 데이터로 이관 예정.
+        // 현재는 버프 Desc에 레벨 무관 항상 표시되는 안내 문구로 사용 중.
+        public string bonusDescriptionTemplate;
+        // pointCost 삭제 — SquadRuntimeData.buffLevelConfig.pointCosts에서 공용 관리
     }
 
     public enum SquadSkillType { Attack, Support }
     public enum SquadBuffCategory { Assist, Enhance }
+    public enum SquadBuffSlotType { Active, Passive }
 
     // ========== 런타임 상태 (SO가 감쌀 대상, 플레이어별로 값이 채워짐) ==========
 

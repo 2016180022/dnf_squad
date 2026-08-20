@@ -19,30 +19,35 @@ MonoBehaviour:
     gearScore: 486155
     fame: 127365
     remainingEntryCount: 1
+    ingredientCount: 3829
   - characterId: 2026002
     characterName: "\uC880\uC2DC\uB044\uB7EC\uC6CC\uC694"
     jobName: "\uC9C4 \uD0A4\uBA54\uB77C"
     gearScore: 313586
     fame: 123118
     remainingEntryCount: 1
+    ingredientCount: 1242
   - characterId: 2026003
     characterName: "\uC790\uD559\uC99D\uC0C1"
     jobName: "\uC9C4 \uC0AC\uB839\uC220\uC0AC"
     gearScore: 262677
     fame: 121350
     remainingEntryCount: 0
+    ingredientCount: 3719
   - characterId: 2026004
     characterName: "\uBCFC\uB968\uC904\uC5EC\uC918\uC694"
     jobName: "\uC9C4 \uBBA4\uC988"
     gearScore: 126278
     fame: 121936
     remainingEntryCount: 1
+    ingredientCount: 1192
   - characterId: 2026005
     characterName: "\uD56D\uC0C1\uD568\uAED8\uD574\uC694"
     jobName: "\uC9C4 \uD5CC\uD130"
     gearScore: 1571
     fame: 74439
     remainingEntryCount: 1
+    ingredientCount: 381
   squadSkills:
   - skillId: 26001
     skillName: "\uC804\uD22C \uC870\uB825"
@@ -106,7 +111,262 @@ MonoBehaviour:
       \uAC01\uC131\uAE30\uB97C \uC2DC\uC804\uD574, \uD50C\uB808\uC774\uC5B4\uC5D0\uAC8C
       \uB9C9\uB300\uD55C \uC591\uC758 \uBC84\uD504\uB97C \uC81C\uACF5\uD55C\uB2E4\\n(\uCFE8\uD0C0\uC784
       140\uCD08)"
-  squadBuffs: []
+  squadBuffs:
+  - buffId: 26101
+    buffName: "\uAC00\uC7A5 \uAC15\uD55C \uB188\uC740 \uB204\uAD6C\uB0D0?"
+    category: 1
+    slotType: 0
+    descriptionTemplate: "\uC2A4\uCFFC\uB4DC \uB9AC\uB354 \uC804\uD22C \uC870\uB825
+      \uC2A4\uD0AC \uACF5\uACA9\uB825\uC744 {0}% \uC99D\uAC00\uC2DC\uD0A8\uB2E4."
+    levels:
+    - level: 1
+      effectValues:
+      - 5
+      bonusDescriptionTemplate: 
+    - level: 2
+      effectValues:
+      - 10
+      bonusDescriptionTemplate: 
+    - level: 3
+      effectValues:
+      - 15
+      bonusDescriptionTemplate: 
+  - buffId: 26102
+    buffName: "\uB9AC\uB4EC\uC744 \uD0C0\uB294 \uC790"
+    category: 1
+    slotType: 0
+    descriptionTemplate: "\uC2A4\uCFFC\uB4DC \uB9AC\uB354 \uD328\uD134 \uC870\uB825
+      \uC785\uB825\uC5D0 \uC131\uACF5 \uC2DC, \uC2A4\uCFFC\uB4DC \uBC84\uD37C \uAC01\uC131\uAE30\uC758
+      \uCFE8\uD0C0\uC784\uC744 {0}\uCD08 \uAC10\uC18C\uC2DC\uD0A8\uB2E4."
+    levels:
+    - level: 1
+      effectValues:
+      - 0.5
+      bonusDescriptionTemplate: 
+    - level: 2
+      effectValues:
+      - 1
+      bonusDescriptionTemplate: 
+    - level: 3
+      effectValues:
+      - 2
+      bonusDescriptionTemplate: 
+  - buffId: 26103
+    buffName: "\uC555\uB3C4\uC801\uC778 \uCE74\uB9AC\uC2A4\uB9C8"
+    category: 1
+    slotType: 0
+    descriptionTemplate: "\uC2A4\uCFFC\uB4DC \uB9AC\uB354 \uAC01\uC131\uAE30\uC758
+      \uADF8\uB85C\uAE30 \uC2DC\uAC04\uC744 {0}\uCD08 \uC99D\uAC00\uC2DC\uD0A8\uB2E4."
+    levels:
+    - level: 1
+      effectValues:
+      - 3
+      bonusDescriptionTemplate: 
+    - level: 2
+      effectValues:
+      - 4
+      bonusDescriptionTemplate: 
+    - level: 3
+      effectValues:
+      - 5
+      bonusDescriptionTemplate: "3\uB808\uBCA8 \uB2EC\uC131 \uC2DC, \uC2A4\uCFFC\uB4DC
+        \uB9AC\uB354\uAC00 \uB4F1\uC7A5\uD560 \uB54C \uD50C\uB808\uC774\uC5B4\uC5D0\uAC8C
+        \uCD5C\uC885 \uB370\uBBF8\uC9C0 10% \uBC84\uD504\uB97C \uBD80\uC5EC\uD55C\uB2E4."
+  - buffId: 26104
+    buffName: "\uB098\uB9CC \uBE7C\uACE0 \uB808\uBCA8\uC5C5"
+    category: 1
+    slotType: 1
+    descriptionTemplate: "\uD50C\uB808\uC774\uC5B4\uB97C \uC81C\uC678\uD55C \uC2A4\uCFFC\uB4DC
+      \uD30C\uD2F0\uAC00 \uB124\uC784\uB4DC \uBC0F \uBCF4\uC2A4\uC5D0\uAC8C \uC8FC\uB294
+      \uD53C\uD574\uAC00 \uCD08\uB2F9 {0}% \uC99D\uAC00\uD55C\uB2E4."
+    levels:
+    - level: 1
+      effectValues:
+      - 10
+      bonusDescriptionTemplate: 
+    - level: 2
+      effectValues:
+      - 20
+      bonusDescriptionTemplate: 
+    - level: 3
+      effectValues:
+      - 30
+      bonusDescriptionTemplate: 
+  - buffId: 26105
+    buffName: "\uB4B7\uACE8\uBAA9 \uC2F8\uC6C0\uBC95"
+    category: 1
+    slotType: 1
+    descriptionTemplate: "\uBAA8\uB4E0 \uB124\uC784\uB4DC \uBC0F \uBCF4\uC2A4\uC758
+      \uBB34\uB825\uD654 \uC218\uCE58 \uAC10\uC18C\uB7C9\uC774 {0} \uC99D\uAC00\uD55C\uB2E4."
+    levels:
+    - level: 1
+      effectValues:
+      - 5
+      bonusDescriptionTemplate: 
+    - level: 2
+      effectValues:
+      - 10
+      bonusDescriptionTemplate: 
+    - level: 3
+      effectValues:
+      - 20
+      bonusDescriptionTemplate: "3\uB808\uBCA8 \uB2EC\uC131 \uC2DC, \uBB34\uB825\uD654
+        \uC0C1\uD0DC\uC5D0\uC11C \uBC1B\uB294 \uD53C\uD574\uAC00 30% \uC99D\uAC00\uD55C\uB2E4."
+  - buffId: 26106
+    buffName: "\uC544\uD2F0\uC2A4\uD2B8 \uC601\uC785"
+    category: 1
+    slotType: 1
+    descriptionTemplate: "\uD50C\uB808\uC774\uC5B4\uC758 \uBAA8\uB4E0 \uC18D\uB3C4\uAC00
+      {0}% \uC99D\uAC00\uD558\uBA70, \uC2A4\uD0AC \uBC94\uC704\uAC00 {1}% \uC99D\uAC00\uD55C\uB2E4."
+    levels:
+    - level: 1
+      effectValues:
+      - 20
+      - 20
+      bonusDescriptionTemplate: 
+    - level: 2
+      effectValues:
+      - 40
+      - 40
+      bonusDescriptionTemplate: 
+    - level: 3
+      effectValues:
+      - 60
+      - 60
+      bonusDescriptionTemplate: 
+  - buffId: 26107
+    buffName: "\uC0C8\uBCBD \uAE30\uB3C4 \uCC38\uC5EC"
+    category: 0
+    slotType: 0
+    descriptionTemplate: "\uC2A4\uCFFC\uB4DC \uBC84\uD37C \uD68C\uBCF5 \uC2A4\uD0AC\uC758
+      \uD68C\uBCF5\uB7C9\uC774 {0}% \uC99D\uAC00\uD558\uBA70, \uCFE8\uD0C0\uC784\uC774
+      {1}\uCD08 \uAC10\uC18C\uD55C\uB2E4."
+    levels:
+    - level: 1
+      effectValues:
+      - 20
+      - 1
+      bonusDescriptionTemplate: 
+    - level: 2
+      effectValues:
+      - 30
+      - 2
+      bonusDescriptionTemplate: 
+    - level: 3
+      effectValues:
+      - 50
+      - 3
+      bonusDescriptionTemplate: "3\uB808\uBCA8 \uB2EC\uC131 \uC2DC, \uD68C\uBCF5
+        \uC2A4\uD0AC\uC5D0 10\uCD08\uAC04 \uBC1B\uB294 \uD53C\uD574 30% \uAC10\uC18C
+        \uD6A8\uACFC\uAC00 \uCD94\uAC00\uB41C\uB2E4."
+  - buffId: 26108
+    buffName: "\uBD80\uD65C \uCD94\uAC00"
+    category: 0
+    slotType: 0
+    descriptionTemplate: "\uC2A4\uCFFC\uB4DC \uBC84\uD37C \uBD80\uD65C \uC2A4\uD0AC\uC758
+      \uC0AC\uC6A9 \uAC00\uB2A5 \uD69F\uC218\uB97C {0}\uD68C \uC99D\uAC00\uC2DC\uD0A8\uB2E4."
+    levels:
+    - level: 1
+      effectValues:
+      - 1
+      bonusDescriptionTemplate: 
+    - level: 2
+      effectValues:
+      - 2
+      bonusDescriptionTemplate: 
+    - level: 3
+      effectValues:
+      - 3
+      bonusDescriptionTemplate: "3\uB808\uBCA8 \uB2EC\uC131 \uC2DC, \uBD80\uD65C
+        \uD6C4 \uD50C\uB808\uC774\uC5B4\uC5D0\uAC8C 10\uCD08\uAC04 \uBB34\uC801 \uC0C1\uD0DC\uB97C
+        \uBD80\uC5EC\uD55C\uB2E4."
+  - buffId: 26109
+    buffName: "\uACF5\uBC29\uACB8\uBE44"
+    category: 0
+    slotType: 0
+    descriptionTemplate: "\uC2A4\uCFFC\uB4DC \uBC84\uD37C \uAC01\uC131\uAE30 \uC2DC\uC804
+      \uC2DC, \uC9C0\uC18D\uC2DC\uAC04 \uB3D9\uC548 \uD50C\uB808\uC774\uC5B4\uAC00
+      \uBC1B\uB294 \uD53C\uD574\uAC00 {0}% \uAC10\uC18C\uD55C\uB2E4."
+    levels:
+    - level: 1
+      effectValues:
+      - 20
+      bonusDescriptionTemplate: 
+    - level: 2
+      effectValues:
+      - 30
+      bonusDescriptionTemplate: 
+    - level: 3
+      effectValues:
+      - 50
+      bonusDescriptionTemplate: 
+  - buffId: 26110
+    buffName: "\uC2DC\uAC04\uC744 \uB2EC\uB9AC\uB294 \uBAA8\uD5D8\uAC00"
+    category: 0
+    slotType: 1
+    descriptionTemplate: "\uBAA8\uB4E0 \uAC81\uD654 \uC99D\uAC00\uB7C9\uC744 {0}%
+      \uAC10\uC18C\uC2DC\uD0A8\uB2E4."
+    levels:
+    - level: 1
+      effectValues:
+      - 10
+      bonusDescriptionTemplate: 
+    - level: 2
+      effectValues:
+      - 20
+      bonusDescriptionTemplate: 
+    - level: 3
+      effectValues:
+      - 30
+      bonusDescriptionTemplate: 
+  - buffId: 26111
+    buffName: "\uC804\uD654\uC704\uBCF5"
+    category: 0
+    slotType: 1
+    descriptionTemplate: "\uD575\uC2EC \uD328\uD134 \uC2E4\uD328 \uC2DC \uB4F1\uC7A5\uD558\uB294
+      \uC548\uAD11\uC5D0 \uC2A4\uCFFC\uB4DC \uB9AC\uB354 \uC804\uD22C \uC870\uB825
+      \uC2A4\uD0AC \uC785\uB825 \uC2DC, \uC2A4\uCFFC\uB4DC \uB9AC\uB354\uAC00 \uB4F1\uC7A5\uD574
+      \uAC15\uC81C\uB85C \uD328\uD134\uC744 \uC911\uB2E8\uC2DC\uD0A4\uACE0, {0}\uCD08\uC758
+      \uADF8\uB85C\uAE30\uB97C \uBD80\uC5EC\uD55C\uB2E4."
+    levels:
+    - level: 1
+      effectValues:
+      - 2
+      bonusDescriptionTemplate: 
+    - level: 2
+      effectValues:
+      - 3
+      bonusDescriptionTemplate: 
+    - level: 3
+      effectValues:
+      - 5
+      bonusDescriptionTemplate: "3\uB808\uBCA8 \uB2EC\uC131 \uC2DC, \uBD80\uD65C
+        \uD6C4 \uD50C\uB808\uC774\uC5B4\uC5D0\uAC8C 10\uCD08\uAC04 \uBB34\uC801 \uC0C1\uD0DC\uB97C
+        \uBD80\uC5EC\uD55C\uB2E4."
+  - buffId: 26112
+    buffName: "2\uC778\uBD84"
+    category: 0
+    slotType: 1
+    descriptionTemplate: "\uD50C\uB808\uC774\uC5B4\uAC00 \uC804\uD22C \uC785\uC7A5
+      \uC2DC, \uCD5C\uB300 \uCCB4\uB825\uC758 {0}%\uC758 \uBCF4\uD638\uB9C9\uC744
+      \uBD80\uC5EC\uBC1B\uB294\uB2E4."
+    levels:
+    - level: 1
+      effectValues:
+      - 50
+      bonusDescriptionTemplate: 
+    - level: 2
+      effectValues:
+      - 70
+      bonusDescriptionTemplate: 
+    - level: 3
+      effectValues:
+      - 100
+      bonusDescriptionTemplate: 
+  buffLevelConfig:
+    maxLevel: 3
+    pointCosts: 0a000000140000001e000000
+  raidIngredientImageId: RaidIngredient
   runtimeState:
     composition:
       leaderCharacterId: 2026001
@@ -128,5 +388,8 @@ MonoBehaviour:
     - slotIndex: 5
       skillId: 26006
     leaderSkillChain: []
-    buffProgress: []
+    leaderSkillChainTotalDamage: 0
+    buffProgress:
+    - buffId: 26112
+      currentLevel: 0
     squadPoints: 0
