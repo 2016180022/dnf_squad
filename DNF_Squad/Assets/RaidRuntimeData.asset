@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0beee7010e1d7f94a877bad5d112be7b, type: 3}
+  m_Name: RaidRuntimeData
+  m_EditorClassIdentifier: Assembly-CSharp::DnfSquad.Data.RaidRuntimeData
+  nodes:
+  - nodeId: node_1
+    boardPosition: {x: 1, y: 1}
+  - nodeId: node_2
+    boardPosition: {x: 1, y: -1}
+  - nodeId: node_3
+    boardPosition: {x: -1, y: -1}
+  - nodeId: node_4
+    boardPosition: {x: -1, y: 1}
+  monsters:
+  - monsterId: uriel
+    monsterName: uriel
+    tier: 0
+    maxHp: 1000000
+    mapBackgroundImageId: town_demo
+    monsterPrefabId: Uriel_demo
+    startingNodeId: node_1
+    patternScriptId: patternScript_uriel
+  defaultNodeBackgroundImageId: town_demo
+  runtimeState:
+    nodeStates:
+    - nodeId: node_1
+      occupants: []
+    - nodeId: node_2
+      occupants: []
+    - nodeId: node_3
+      occupants: []
+    - nodeId: node_4
+      occupants: []
+    monsterStates:
+    - monsterId: uriel
+      currentNodeId: node_1
+      currentHp: 1000000
+      isDead: 0
