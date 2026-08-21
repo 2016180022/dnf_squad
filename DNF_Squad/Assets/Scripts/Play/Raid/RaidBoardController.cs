@@ -9,6 +9,9 @@ using DnfSquad.Play.Core;
 
 namespace DnfSquad.Play.Raid
 {
+    /// <summary>노드 외형 상태 — 비어있음 / 네임드 / 보스. None은 최초 1회 강제 갱신용 초기값.</summary>
+    public enum NodeVisualState { None, EmptyNode, NamedNode, BossNode }
+
     /// <summary>
     /// 현황판 UI — 발판 선택과 '진입' 처리를 담당한다 (레이드 기능).
     /// 1차 테스트 버전: 노드 4개를 인스펙터에서 직접 연결해서 사용.
@@ -20,6 +23,13 @@ namespace DnfSquad.Play.Raid
         {
             public string nodeId;
             public Button button;
+
+            // 노드 외형 프리팹은 button의 Transform 아래에 바로 생성한다 —
+            // 발판 위치 = 버튼 위치라서 별도 위치 지정이 필요 없음
+            [System.NonSerialized] public GameObject spawnedVisual;
+            // 프리팹 내부(하이라이트, 체력 게이지)는 NodeVisualPrefab이 캡슐화 — 여기서 직접 뒤지지 않음
+            [System.NonSerialized] public NodeVisualPrefab spawnedVisualPrefab;
+            [System.NonSerialized] public NodeVisualState currentVisualState = NodeVisualState.None;
         }
 
         [SerializeField] private RaidRuntimeData raidRuntimeData;
@@ -66,11 +76,60 @@ namespace DnfSquad.Play.Raid
             {
                 ToggleBoard();
             }
+
+            RefreshNodes();
+        }
+
+        private void RefreshNodes()
+        {
+            foreach (var binding in nodeButtons)
+            {
+                var monster = raidRuntimeData.GetMonsterAtNode(binding.nodeId);
+                NodeVisualState state = monster == null ? NodeVisualState.EmptyNode
+                    : monster.tier == MonsterTier.Boss ? NodeVisualState.BossNode : NodeVisualState.NamedNode;
+
+                RefreshNodeVisual(binding, state, monster);
+                RefreshNodeMonsterHp(binding, monster);
+            }
+        }
+
+        /// <summary>노드 외형 상태가 바뀌었을 때만 프리팹을 교체한다 (매 프레임 재생성 방지)</summary>
+        private void RefreshNodeVisual(NodeButtonBinding binding, NodeVisualState state, MonsterData monster)
+        {
+            if (binding.currentVisualState == state) return;
+            binding.currentVisualState = state;
+
+            if (binding.spawnedVisual != null) Destroy(binding.spawnedVisual);
+            binding.spawnedVisualPrefab = null;
+
+            GameObject prefab = Resources.Load<GameObject>($"Prefab/Node/{state}");
+            if (prefab == null)
+            {
+                Debug.LogWarning($"[RaidBoardController] 노드 외형 프리팹을 찾을 수 없음: Prefab/Node/{state}");
+                return;
+            }
+            binding.spawnedVisual = Instantiate(prefab, binding.button.transform);
+            binding.spawnedVisualPrefab = binding.spawnedVisual.GetComponent<NodeVisualPrefab>();
+            // 방금 프리팹이 바뀌었으니 현재 선택 상태를 새로 스폰된 프리팹에도 즉시 반영
+            binding.spawnedVisualPrefab?.SetHighlighted(binding.nodeId == selectedNodeId);
+            // Named/Boss로 바뀐 경우, 그 노드에 있는 몬스터 아이콘을 동기화
+            if (monster != null) binding.spawnedVisualPrefab?.SetMonsterIcon(monster.monsterId);
+        }
+
+        /// <summary>이번에 스폰된 노드 프리팹 안에 체력 게이지가 있으면(=네임드/보스) 값을 갱신한다</summary>
+        private void RefreshNodeMonsterHp(NodeButtonBinding binding, MonsterData monster)
+        {
+            var gauge = binding.spawnedVisualPrefab?.HpGauge;
+            if (gauge == null || monster == null) return;
+
+            int currentHp = raidRuntimeData.GetMonsterState(monster.monsterId)?.currentHp ?? 0;
+            gauge.SetRatio(currentHp, monster.maxHp);
         }
 
         public void OpenBoard()
         {
             selectedNodeId = null;
+            RefreshHighlights();
             EventSystem.current.SetSelectedGameObject(null);
             boardCanvas.SetActive(true);
         }
@@ -82,12 +141,17 @@ namespace DnfSquad.Play.Raid
             else OpenBoard();
         }
 
-        /// <summary>발판을 선택 상태로 표시한다. 버튼의 Selectable "Selected Color"를
-        /// 그대로 활용하므로, 인스펙터에서 각 버튼의 Selected 색상을 원하는 하이라이트 색으로
-        /// 지정해두면 별도 하이라이트 오브젝트 없이도 선택 표시가 된다.</summary>
+        /// <summary>선택된 노드의 하이라이트만 켜고 나머지는 끈다. 버튼 자체 그래픽은 건드리지 않음.</summary>
+        private void RefreshHighlights()
+        {
+            foreach (var binding in nodeButtons)
+                binding.spawnedVisualPrefab?.SetHighlighted(binding.nodeId == selectedNodeId);
+        }
+
         private void SelectNode(string nodeId)
         {
             selectedNodeId = nodeId;
+            RefreshHighlights();
 
             var binding = nodeButtons.FirstOrDefault(b => b.nodeId == nodeId);
             if (binding != null) EventSystem.current.SetSelectedGameObject(binding.button.gameObject);

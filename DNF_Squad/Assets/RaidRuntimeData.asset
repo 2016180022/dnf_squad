@@ -14,19 +14,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DnfSquad.Data.RaidRuntimeData
   monsters:
   - monsterId: uriel
-    monsterName: uriel
+    monsterName: "\uC6B0\uB9AC\uC5D8"
     tier: 0
-    maxHp: 1000000
+    maxHp: 100
     mapBackgroundImageId: town_demo
     monsterPrefabId: Uriel_demo
     startingNodeId: node_1
     spawnPosition: {x: 7, y: -3, z: 0}
     patternScriptId: patternScript_uriel
   defaultNodeBackgroundImageId: town_demo
+  playerMaxHp: 100
+  playerMaxMp: 100
   runtimeState:
     nodeStates: []
-    monsterStates:
-    - monsterId: uriel
-      currentNodeId: node_1
-      currentHp: 1000000
-      isDead: 0
+    monsterStates: []
+    playerCurrentHp: 100
+    playerCurrentMp: 100

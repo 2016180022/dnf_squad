@@ -14,6 +14,10 @@ namespace DnfSquad.Data
         [Tooltip("Resources/Image/Map/ 아래 파일명 (확장자 제외)")]
         public string defaultNodeBackgroundImageId;
 
+        [Header("플레이어 스탯 (데모용 고정값 — 캐릭터별 수치 대신 레이드에서 통일 관리)")]
+        public int playerMaxHp = 100;
+        public int playerMaxMp = 100;
+
         [Header("런타임 상태 (플레이 중 갱신, 저장 대상)")]
         public RaidBoardRuntimeState runtimeState = new RaidBoardRuntimeState();
 
@@ -60,7 +64,11 @@ namespace DnfSquad.Data
         /// <summary>플레이 씬 시작 시 마스터 데이터 기준으로 런타임 상태를 새로 채운다</summary>
         public void InitializeRuntimeState()
         {
-            runtimeState = new RaidBoardRuntimeState();
+            runtimeState = new RaidBoardRuntimeState
+            {
+                playerCurrentHp = playerMaxHp,
+                playerCurrentMp = playerMaxMp
+            };
 
             foreach (var monster in monsters)
             {

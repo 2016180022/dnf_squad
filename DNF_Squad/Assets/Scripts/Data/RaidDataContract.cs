@@ -62,5 +62,7 @@ namespace DnfSquad.Data
     {
         public List<RaidNodeRuntimeState> nodeStates = new List<RaidNodeRuntimeState>();
         public List<MonsterRuntimeState> monsterStates = new List<MonsterRuntimeState>();
+        public int playerCurrentHp;
+        public int playerCurrentMp;
     }
 }

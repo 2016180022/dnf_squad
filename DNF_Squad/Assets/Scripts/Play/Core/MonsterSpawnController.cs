@@ -14,6 +14,12 @@ namespace DnfSquad.Play.Core
 
         private GameObject spawnedMonsterObject;
 
+        /// <summary>현재 맵에 스폰돼 있는 몬스터 ID. 없으면 null.</summary>
+        public string CurrentMonsterId { get; private set; }
+
+        /// <summary>현재 맵에 스폰돼 있는 몬스터 이름. 없으면 null.</summary>
+        public string CurrentMonsterName { get; private set; }
+
         /// <summary>지정한 노드에 현재 있는 몬스터를 스폰. 몬스터가 없으면 기존 오브젝트만 정리하고 끝.</summary>
         public void SpawnMonsterAtNode(string nodeId)
         {
@@ -31,11 +37,15 @@ namespace DnfSquad.Play.Core
 
             spawnedMonsterObject = Instantiate(prefab, monster.spawnPosition, Quaternion.identity);
             spawnedMonsterObject.name = $"Monster_{monster.monsterId}";
+            CurrentMonsterId = monster.monsterId;
+            CurrentMonsterName = monster.monsterName;
         }
 
         public void ClearSpawnedMonster()
         {
             if (spawnedMonsterObject != null) Destroy(spawnedMonsterObject);
+            CurrentMonsterId = null;
+            CurrentMonsterName = null;
         }
     }
 }
