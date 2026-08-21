@@ -4954,7 +4954,8 @@ MonoBehaviour:
   monsterSpawnController: {fileID: 314657538}
   gaugeRoot: {fileID: 250146741}
   hpGauge: {fileID: 203001133}
-  monsterNameText: {fileID: 0}
+  monsterNameText: {fileID: 1867057714}
+  monsterIcon: {fileID: 0}
 --- !u!1 &1936047973
 GameObject:
   m_ObjectHideFlags: 0
@@ -5137,6 +5138,7 @@ MonoBehaviour:
   gaugeRoot: {fileID: 1390107268}
   hpGauge: {fileID: 203001133}
   monsterNameText: {fileID: 745410604}
+  monsterIcon: {fileID: 1969538708}
 --- !u!1 &1969538706
 GameObject:
   m_ObjectHideFlags: 0
@@ -5194,7 +5196,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -8586417740124189794, guid: 48cfe4c97418e2646bab0c1a530768d1, type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

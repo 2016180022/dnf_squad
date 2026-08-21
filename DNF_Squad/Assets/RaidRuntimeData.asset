@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DnfSquad.Data.RaidRuntimeData
   monsters:
   - monsterId: uriel
-    monsterName: "\uC6B0\uB9AC\uC5D8"
+    monsterName: "\uC9C4\uB9AC\uC758 \uBD88\uAF43 \uC6B0\uB9AC\uC5D8"
     tier: 0
     maxHp: 100
     mapBackgroundImageId: town_demo
