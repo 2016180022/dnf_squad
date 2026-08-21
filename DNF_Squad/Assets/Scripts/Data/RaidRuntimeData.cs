@@ -8,8 +8,6 @@ namespace DnfSquad.Data
     public class RaidRuntimeData : ScriptableObject
     {
         [Header("마스터 데이터 (레이드 스크립트 설정, 읽기 전용)")]
-        [Tooltip("1차 테스트: 중앙 기준 사각형 배치 4개. 실제 19개 배치는 이후 반영")]
-        public List<RaidNodeData> nodes = new List<RaidNodeData>();
         public List<MonsterData> monsters = new List<MonsterData>();
 
         [Header("몬스터가 없는 노드에 표시할 기본 배경")]
@@ -21,14 +19,24 @@ namespace DnfSquad.Data
 
         // ===== 조회 헬퍼 =====
 
-        public RaidNodeData GetNode(string nodeId) =>
-            nodes.FirstOrDefault(n => n.nodeId == nodeId);
-
         public MonsterData GetMonster(string monsterId) =>
             monsters.FirstOrDefault(m => m.monsterId == monsterId);
 
         public RaidNodeRuntimeState GetNodeState(string nodeId) =>
             runtimeState.nodeStates.FirstOrDefault(s => s.nodeId == nodeId);
+
+        /// <summary>노드 런타임 상태를 조회하고, 없으면 새로 만들어 반환한다.
+        /// 노드 목록을 마스터 데이터로 미리 들고 있지 않으므로, 필요한 시점에 생성한다.</summary>
+        public RaidNodeRuntimeState GetOrCreateNodeState(string nodeId)
+        {
+            var state = GetNodeState(nodeId);
+            if (state == null)
+            {
+                state = new RaidNodeRuntimeState { nodeId = nodeId };
+                runtimeState.nodeStates.Add(state);
+            }
+            return state;
+        }
 
         public MonsterRuntimeState GetMonsterState(string monsterId) =>
             runtimeState.monsterStates.FirstOrDefault(s => s.monsterId == monsterId);
@@ -53,15 +61,6 @@ namespace DnfSquad.Data
         public void InitializeRuntimeState()
         {
             runtimeState = new RaidBoardRuntimeState();
-
-            foreach (var node in nodes)
-            {
-                runtimeState.nodeStates.Add(new RaidNodeRuntimeState
-                {
-                    nodeId = node.nodeId,
-                    occupants = new List<RaidNodeOccupant>()
-                });
-            }
 
             foreach (var monster in monsters)
             {

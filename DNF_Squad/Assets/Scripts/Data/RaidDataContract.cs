@@ -8,15 +8,6 @@ namespace DnfSquad.Data
     /// <summary>몬스터의 등급 — 네임드 / 보스</summary>
     public enum MonsterTier { Named, Boss }
 
-    /// <summary>현황판의 발판 1개 = 맵 1개에 대한 마스터 정보. 위치만 가지며,
-    /// 지금 이 노드에 어떤 몬스터가 있는지는 몬스터 쪽 런타임 상태(currentNodeId)가 결정한다.</summary>
-    [System.Serializable]
-    public class RaidNodeData
-    {
-        public string nodeId;                 // 고유 ID
-        public Vector2 boardPosition;         // 현황판 UI 상의 좌표
-    }
-
     /// <summary>몬스터 마스터 데이터</summary>
     [System.Serializable]
     public class MonsterData
@@ -31,6 +22,8 @@ namespace DnfSquad.Data
         public string monsterPrefabId;
         [Tooltip("레이드 시작 시 이 몬스터가 배치될 노드 ID")]
         public string startingNodeId;
+        [Tooltip("이 몬스터가 소환될 때 배치될 월드 좌표")]
+        public Vector3 spawnPosition;
         [Tooltip("패턴 스크립트 연동 예정 — 지금은 자리만 확보")]
         public string patternScriptId;
     }

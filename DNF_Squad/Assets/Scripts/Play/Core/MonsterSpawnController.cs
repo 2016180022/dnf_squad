@@ -11,7 +11,6 @@ namespace DnfSquad.Play.Core
     public class MonsterSpawnController : MonoBehaviour
     {
         [SerializeField] private RaidRuntimeData raidRuntimeData;
-        [SerializeField] private Vector3 spawnPosition = Vector3.zero;
 
         private GameObject spawnedMonsterObject;
 
@@ -30,7 +29,7 @@ namespace DnfSquad.Play.Core
                 return;
             }
 
-            spawnedMonsterObject = Instantiate(prefab, spawnPosition, Quaternion.identity);
+            spawnedMonsterObject = Instantiate(prefab, monster.spawnPosition, Quaternion.identity);
             spawnedMonsterObject.name = $"Monster_{monster.monsterId}";
         }
 

@@ -26,6 +26,10 @@ namespace DnfSquad.Play.Raid
         [SerializeField] private Button enterButton;
         [SerializeField] private MapTransitionController mapTransitionController;
 
+        [Header("투명도 조절")]
+        [SerializeField] private CanvasGroup boardCanvasGroup;
+        [SerializeField] private Slider opacitySlider;
+
         private string selectedNodeId;
 
         private void Start()
@@ -39,7 +43,19 @@ namespace DnfSquad.Play.Raid
             }
 
             enterButton.onClick.AddListener(EnterSelectedNode);
+
+            if (opacitySlider != null && boardCanvasGroup != null)
+            {
+                opacitySlider.value = boardCanvasGroup.alpha;
+                opacitySlider.onValueChanged.AddListener(SetBoardOpacity);
+            }
+
             OpenBoard();
+        }
+
+        private void SetBoardOpacity(float value)
+        {
+            boardCanvasGroup.alpha = value;
         }
 
         private void Update()

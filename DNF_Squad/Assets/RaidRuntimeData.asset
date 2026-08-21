@@ -12,15 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0beee7010e1d7f94a877bad5d112be7b, type: 3}
   m_Name: RaidRuntimeData
   m_EditorClassIdentifier: Assembly-CSharp::DnfSquad.Data.RaidRuntimeData
-  nodes:
-  - nodeId: node_1
-    boardPosition: {x: 1, y: 1}
-  - nodeId: node_2
-    boardPosition: {x: 1, y: -1}
-  - nodeId: node_3
-    boardPosition: {x: -1, y: -1}
-  - nodeId: node_4
-    boardPosition: {x: -1, y: 1}
   monsters:
   - monsterId: uriel
     monsterName: uriel
@@ -29,18 +20,11 @@ MonoBehaviour:
     mapBackgroundImageId: town_demo
     monsterPrefabId: Uriel_demo
     startingNodeId: node_1
+    spawnPosition: {x: 7, y: -3, z: 0}
     patternScriptId: patternScript_uriel
   defaultNodeBackgroundImageId: town_demo
   runtimeState:
-    nodeStates:
-    - nodeId: node_1
-      occupants: []
-    - nodeId: node_2
-      occupants: []
-    - nodeId: node_3
-      occupants: []
-    - nodeId: node_4
-      occupants: []
+    nodeStates: []
     monsterStates:
     - monsterId: uriel
       currentNodeId: node_1
