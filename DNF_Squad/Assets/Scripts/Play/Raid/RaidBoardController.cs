@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using DnfSquad.Data;
@@ -69,6 +71,7 @@ namespace DnfSquad.Play.Raid
         public void OpenBoard()
         {
             selectedNodeId = null;
+            EventSystem.current.SetSelectedGameObject(null);
             boardCanvas.SetActive(true);
         }
 
@@ -79,9 +82,15 @@ namespace DnfSquad.Play.Raid
             else OpenBoard();
         }
 
+        /// <summary>발판을 선택 상태로 표시한다. 버튼의 Selectable "Selected Color"를
+        /// 그대로 활용하므로, 인스펙터에서 각 버튼의 Selected 색상을 원하는 하이라이트 색으로
+        /// 지정해두면 별도 하이라이트 오브젝트 없이도 선택 표시가 된다.</summary>
         private void SelectNode(string nodeId)
         {
             selectedNodeId = nodeId;
+
+            var binding = nodeButtons.FirstOrDefault(b => b.nodeId == nodeId);
+            if (binding != null) EventSystem.current.SetSelectedGameObject(binding.button.gameObject);
         }
 
         private void EnterSelectedNode()
