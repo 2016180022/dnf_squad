@@ -2685,24 +2685,6 @@ MonoBehaviour:
     button: {fileID: 1461808935}
   - nodeId: node_4
     button: {fileID: 1662533630}
-  - nodeId: node_5
-    button: {fileID: 1839011039}
-  - nodeId: node_6
-    button: {fileID: 309894}
-  - nodeId: node_7
-    button: {fileID: 2137994233}
-  - nodeId: node_8
-    button: {fileID: 1063975719}
-  - nodeId: node_9
-    button: {fileID: 1543791134}
-  - nodeId: node_10
-    button: {fileID: 1171305127}
-  - nodeId: node_11
-    button: {fileID: 36625026}
-  - nodeId: node_12
-    button: {fileID: 970314821}
-  - nodeId: BossNode
-    button: {fileID: 1899585080}
   enterButton: {fileID: 462669170}
   mapTransitionController: {fileID: 9106018}
   luminousGaugeController: {fileID: 436176024}
@@ -6460,7 +6442,7 @@ GameObject:
   - component: {fileID: 1899585081}
   - component: {fileID: 1899585080}
   m_Layer: 5
-  m_Name: BossNode
+  m_Name: node_13
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

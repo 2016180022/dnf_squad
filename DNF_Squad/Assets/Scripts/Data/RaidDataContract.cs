@@ -5,8 +5,8 @@ namespace DnfSquad.Data
 {
     // ========== 마스터 데이터 (레이드 스크립트 설정, 읽기 전용) ==========
 
-    /// <summary>몬스터의 등급 — 네임드 / 보스</summary>
-    public enum MonsterTier { Named, Boss }
+    /// <summary>몬스터의 등급 — 네임드 / 보스(우리엘·라파엘) / 미카엘라</summary>
+    public enum MonsterTier { Named, Boss, Michaela }
 
     /// <summary>몬스터 마스터 데이터</summary>
     [System.Serializable]

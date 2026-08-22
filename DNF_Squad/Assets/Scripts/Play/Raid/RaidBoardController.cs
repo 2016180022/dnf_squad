@@ -37,6 +37,7 @@ namespace DnfSquad.Play.Raid
         [SerializeField] private List<NodeButtonBinding> nodeButtons = new List<NodeButtonBinding>();
         [SerializeField] private Button enterButton;
         [SerializeField] private MapTransitionController mapTransitionController;
+        [SerializeField] private LuminousGaugeController luminousGaugeController;
 
         [Header("투명도 조절")]
         [SerializeField] private CanvasGroup boardCanvasGroup;
@@ -85,8 +86,10 @@ namespace DnfSquad.Play.Raid
             foreach (var binding in nodeButtons)
             {
                 var monster = raidRuntimeData.GetMonsterAtNode(binding.nodeId);
+                // 미카엘라도 보스 노드 프리팹(체력 게이지 + 성광 게이지)을 그대로 쓰므로 여기서만 Boss/Michaela를 함께 취급
                 NodeVisualState state = monster == null ? NodeVisualState.EmptyNode
-                    : monster.tier == MonsterTier.Boss ? NodeVisualState.BossNode : NodeVisualState.NamedNode;
+                    : (monster.tier == MonsterTier.Boss || monster.tier == MonsterTier.Michaela)
+                        ? NodeVisualState.BossNode : NodeVisualState.NamedNode;
 
                 RefreshNodeVisual(binding, state, monster);
                 RefreshNodeMonsterHp(binding, monster);
@@ -116,14 +119,32 @@ namespace DnfSquad.Play.Raid
             if (monster != null) binding.spawnedVisualPrefab?.SetMonsterIcon(monster.monsterId);
         }
 
-        /// <summary>이번에 스폰된 노드 프리팹 안에 체력 게이지가 있으면(=네임드/보스) 값을 갱신한다</summary>
+        /// <summary>이번에 스폰된 노드 프리팹 안에 체력 게이지가 있으면(=네임드/보스) 값을 갱신하고, 미카엘라 노드면 위치 고정 카운트다운 게이지도 갱신한다</summary>
         private void RefreshNodeMonsterHp(NodeButtonBinding binding, MonsterData monster)
         {
-            var gauge = binding.spawnedVisualPrefab?.HpGauge;
-            if (gauge == null || monster == null) return;
+            if (monster == null) return;
 
-            int currentHp = raidRuntimeData.GetMonsterState(monster.monsterId)?.currentHp ?? 0;
-            gauge.SetRatio(currentHp, monster.maxHp);
+            var hpGauge = binding.spawnedVisualPrefab?.HpGauge;
+            if (hpGauge != null)
+            {
+                int currentHp = raidRuntimeData.GetMonsterState(monster.monsterId)?.currentHp ?? 0;
+                hpGauge.SetRatio(currentHp, monster.maxHp);
+            }
+
+            // 미카엘라 노드에만 존재하는 위치 고정 카운트다운 게이지 갱신
+            if (monster.tier == MonsterTier.Michaela)
+            {
+                binding.spawnedVisualPrefab?.LuminousGauge?.SetRatio(
+                    luminousGaugeController.FixedPositionCountdownRemaining,
+                    luminousGaugeController.FixedPositionCountdownMax);
+            }
+            // 보스(우리엘/라파엘) 노드는 같은 게이지 슬롯을 비점유 카운트다운으로 갱신
+            else if (monster.tier == MonsterTier.Boss)
+            {
+                binding.spawnedVisualPrefab?.LuminousGauge?.SetRatio(
+                    luminousGaugeController.GetBossUnoccupiedCountdownRemaining(monster.monsterId),
+                    luminousGaugeController.BossUnoccupiedCountdownMax);
+            }
         }
 
         public void OpenBoard()

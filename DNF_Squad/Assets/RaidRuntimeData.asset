@@ -27,55 +27,19 @@ MonoBehaviour:
     tier: 1
     maxHp: 100
     mapBackgroundImageId: town_demo
-    monsterPrefabId: raphael_demo
+    monsterPrefabId: raphael
     startingNodeId: node_3
-    spawnPosition: {x: 7, y: -3, z: 0}
+    spawnPosition: {x: -6, y: 0, z: 0}
     patternScriptId: patternScript_raphael
-  - monsterId: uriel
-    monsterName: "\uC9C4\uB9AC\uC758 \uBD88\uAF43 \uC6B0\uB9AC\uC5D8"
-    tier: 1
+  - monsterId: michaela
+    monsterName: "\uBB34\uB108\uC9C4 \uC131\uC790 \uBBF8\uCE74\uC5D8\uB77C"
+    tier: 2
     maxHp: 100
     mapBackgroundImageId: town_demo
-    monsterPrefabId: Uriel_demo
-    startingNodeId: node_1
-    spawnPosition: {x: 7, y: -3, z: 0}
-    patternScriptId: patternScript_uriel
-  - monsterId: uriel
-    monsterName: "\uC9C4\uB9AC\uC758 \uBD88\uAF43 \uC6B0\uB9AC\uC5D8"
-    tier: 1
-    maxHp: 100
-    mapBackgroundImageId: town_demo
-    monsterPrefabId: Uriel_demo
-    startingNodeId: node_1
-    spawnPosition: {x: 7, y: -3, z: 0}
-    patternScriptId: patternScript_uriel
-  - monsterId: uriel
-    monsterName: "\uC9C4\uB9AC\uC758 \uBD88\uAF43 \uC6B0\uB9AC\uC5D8"
-    tier: 1
-    maxHp: 100
-    mapBackgroundImageId: town_demo
-    monsterPrefabId: Uriel_demo
-    startingNodeId: node_1
-    spawnPosition: {x: 7, y: -3, z: 0}
-    patternScriptId: patternScript_uriel
-  - monsterId: uriel
-    monsterName: "\uC9C4\uB9AC\uC758 \uBD88\uAF43 \uC6B0\uB9AC\uC5D8"
-    tier: 1
-    maxHp: 100
-    mapBackgroundImageId: town_demo
-    monsterPrefabId: Uriel_demo
-    startingNodeId: node_1
-    spawnPosition: {x: 7, y: -3, z: 0}
-    patternScriptId: patternScript_uriel
-  - monsterId: uriel
-    monsterName: "\uC9C4\uB9AC\uC758 \uBD88\uAF43 \uC6B0\uB9AC\uC5D8"
-    tier: 1
-    maxHp: 100
-    mapBackgroundImageId: town_demo
-    monsterPrefabId: Uriel_demo
-    startingNodeId: node_1
-    spawnPosition: {x: 7, y: -3, z: 0}
-    patternScriptId: patternScript_uriel
+    monsterPrefabId: michela
+    startingNodeId: BossNode
+    spawnPosition: {x: 7, y: -2, z: 0}
+    patternScriptId: patternScript_michaela
   defaultNodeBackgroundImageId: town_demo
   playerMaxHp: 100
   playerMaxMp: 100
@@ -87,6 +51,14 @@ MonoBehaviour:
       currentNodeId: node_1
       currentHp: 100
       isDead: 0
+    - monsterId: raphael
+      currentNodeId: node_3
+      currentHp: 100
+      isDead: 0
+    - monsterId: michaela
+      currentNodeId: node_13
+      currentHp: 100
+      isDead: 0
     playerCurrentHp: 100
     playerCurrentMp: 100
-    luminousGauge: 44
+    luminousGauge: 100

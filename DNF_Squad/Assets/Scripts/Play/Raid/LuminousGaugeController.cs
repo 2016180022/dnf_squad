@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using DnfSquad.Data;
@@ -15,10 +16,11 @@ namespace DnfSquad.Play.Raid
         private const float BaseDecayInterval = 6f;      // 규칙 2: 6초에 1씩 감소
         private const int BaseDecayAmount = 1;
 
-        private const float UnoccupiedDecayInterval = 30f; // 규칙 3: 보스 비점유 30초마다 20 감소
-        private const int UnoccupiedDecayAmount = 20;
+        // 규칙 3: 보스(우리엘/라파엘) 비점유 — 각자 독립적으로 60초마다 10 감소
+        private const float BossUnoccupiedDecayInterval = 60f;
+        private const int BossUnoccupiedDecayAmount = 10;
 
-        private const float FixedPositionDecayInterval = 30f; // 규칙 4: 위치 고정 30초마다 30 감소
+        private const float FixedPositionDecayInterval = 30f; // 규칙 4: 미카엘라 위치 고정 30초마다 30 감소
         private const int FixedPositionDecayAmount = 30;
 
         [SerializeField] private RaidRuntimeData raidRuntimeData;
@@ -30,20 +32,31 @@ namespace DnfSquad.Play.Raid
         public int MaxLuminousGauge => raidRuntimeData.maxLuminousGauge;
         public int CurrentLuminousGauge => raidRuntimeData.runtimeState.luminousGauge;
 
+        // 미카엘라 위치 고정 카운트다운 게이지용 (30에서 시작해 1초에 1씩 줄어드는 형태로 노출)
+        public float FixedPositionCountdownMax => FixedPositionDecayInterval;
+        public float FixedPositionCountdownRemaining => Mathf.Max(0f, FixedPositionDecayInterval - fixedPositionTimer);
+
+        // 보스(우리엘/라파엘) 비점유 카운트다운 게이지용. monsterId별로 독립된 값.
+        public float BossUnoccupiedCountdownMax => BossUnoccupiedDecayInterval;
+        public float GetBossUnoccupiedCountdownRemaining(string monsterId) =>
+            Mathf.Max(0f, BossUnoccupiedDecayInterval - (bossUnoccupiedTimers.TryGetValue(monsterId, out var t) ? t : 0f));
+
         private float baseDecayTimer;
-        private float unoccupiedTimer;
+
+        // 규칙 3: 우리엘/라파엘 각각 독립적인 비점유 타이머 (monsterId 기준)
+        private readonly Dictionary<string, float> bossUnoccupiedTimers = new Dictionary<string, float>();
+
         private float fixedPositionTimer;
-        private string lastBossNodeId;
-        private bool hasLastBossNodeId;
+        private string lastMichaelaNodeId;
+        private bool hasLastMichaelaNodeId;
 
         private void Update()
         {
             float dt = Time.deltaTime;
-            MonsterData boss = GetBoss();
 
             TickBaseDecay(dt);
-            TickBossUnoccupied(dt, boss);
-            TickBossPositionFixed(dt, boss);
+            TickBossUnoccupied(dt);
+            TickMichaelaPositionFixed(dt, GetMichaela());
         }
 
         private void TickBaseDecay(float dt)
@@ -56,39 +69,49 @@ namespace DnfSquad.Play.Raid
             }
         }
 
-        /// <summary>규칙 3: 플레이어가 보스 노드에 없는 상태(비점유)가 유지되는 동안 30초마다 20 감소</summary>
-        private void TickBossUnoccupied(float dt, MonsterData boss)
+        /// <summary>규칙 3: 우리엘/라파엘 각각 — 플레이어가 그 몬스터 노드에 없는 상태(비점유)가 유지되는 동안 60초마다 10 감소</summary>
+        private void TickBossUnoccupied(float dt)
         {
-            if (boss == null) { unoccupiedTimer = 0f; return; }
+            var bosses = raidRuntimeData.monsters.Where(m => m.tier == MonsterTier.Boss).ToList();
 
-            string bossNodeId = raidRuntimeData.GetMonsterState(boss.monsterId)?.currentNodeId;
-            bool occupied = bossNodeId != null && bossNodeId == mapTransitionController.CurrentNodeId;
+            // 더 이상 존재하지 않는(죽었거나 스크립트에서 빠진) 몬스터의 타이머는 정리
+            var activeIds = new HashSet<string>(bosses.Select(b => b.monsterId));
+            foreach (var staleId in bossUnoccupiedTimers.Keys.Where(id => !activeIds.Contains(id)).ToList())
+                bossUnoccupiedTimers.Remove(staleId);
 
-            if (occupied)
+            foreach (var boss in bosses)
             {
-                unoccupiedTimer = 0f;
-                return;
-            }
+                string bossNodeId = raidRuntimeData.GetMonsterState(boss.monsterId)?.currentNodeId;
+                bool occupied = bossNodeId != null && bossNodeId == mapTransitionController.CurrentNodeId;
 
-            unoccupiedTimer += dt;
-            while (unoccupiedTimer >= UnoccupiedDecayInterval)
-            {
-                unoccupiedTimer -= UnoccupiedDecayInterval;
-                DecreaseGauge(UnoccupiedDecayAmount);
+                if (occupied)
+                {
+                    bossUnoccupiedTimers[boss.monsterId] = 0f;
+                    continue;
+                }
+
+                float timer = bossUnoccupiedTimers.TryGetValue(boss.monsterId, out var t) ? t : 0f;
+                timer += dt;
+                while (timer >= BossUnoccupiedDecayInterval)
+                {
+                    timer -= BossUnoccupiedDecayInterval;
+                    DecreaseGauge(BossUnoccupiedDecayAmount);
+                }
+                bossUnoccupiedTimers[boss.monsterId] = timer;
             }
         }
 
-        /// <summary>규칙 4: 보스(미카엘라) 위치가 바뀌지 않는 상태가 유지되는 동안 30초마다 30 감소</summary>
-        private void TickBossPositionFixed(float dt, MonsterData boss)
+        /// <summary>규칙 4: 미카엘라 위치가 바뀌지 않는 상태가 유지되는 동안 30초마다 30 감소</summary>
+        private void TickMichaelaPositionFixed(float dt, MonsterData michaela)
         {
-            if (boss == null) { fixedPositionTimer = 0f; hasLastBossNodeId = false; return; }
+            if (michaela == null) { fixedPositionTimer = 0f; hasLastMichaelaNodeId = false; return; }
 
-            string bossNodeId = raidRuntimeData.GetMonsterState(boss.monsterId)?.currentNodeId;
+            string michaelaNodeId = raidRuntimeData.GetMonsterState(michaela.monsterId)?.currentNodeId;
 
-            if (!hasLastBossNodeId || bossNodeId != lastBossNodeId)
+            if (!hasLastMichaelaNodeId || michaelaNodeId != lastMichaelaNodeId)
             {
-                lastBossNodeId = bossNodeId;
-                hasLastBossNodeId = true;
+                lastMichaelaNodeId = michaelaNodeId;
+                hasLastMichaelaNodeId = true;
                 fixedPositionTimer = 0f;
                 return;
             }
@@ -101,8 +124,8 @@ namespace DnfSquad.Play.Raid
             }
         }
 
-        private MonsterData GetBoss() =>
-            raidRuntimeData.monsters.FirstOrDefault(m => m.tier == MonsterTier.Boss);
+        private MonsterData GetMichaela() =>
+            raidRuntimeData.monsters.FirstOrDefault(m => m.tier == MonsterTier.Michaela);
 
         /// <summary>DecayMultiplier를 적용해 성광 유지율을 감소시킨다 (0 미만으로 내려가지 않음).</summary>
         private void DecreaseGauge(int amount)

@@ -14,10 +14,13 @@ namespace DnfSquad.Play.Raid
         [SerializeField] private GameObject highlightObject;
         [Tooltip("Named/Boss만 보유. Empty는 비워둬도 됨")]
         [SerializeField] private Core.ValueGaugeUI hpGauge;
+        [Tooltip("미카엘라만 보유. 위치 고정 카운트다운 게이지")]
+        [SerializeField] private Core.ValueGaugeUI luminousGauge;
         [Tooltip("Named/Boss만 보유. 이 노드에 있는 몬스터 아이콘")]
         [SerializeField] private Image bossIcon;
 
         public Core.ValueGaugeUI HpGauge => hpGauge;
+        public Core.ValueGaugeUI LuminousGauge => luminousGauge;
 
         public void SetHighlighted(bool highlighted)
         {
