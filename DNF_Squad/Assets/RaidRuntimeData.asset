@@ -36,7 +36,7 @@ MonoBehaviour:
     tier: 2
     maxHp: 100
     mapBackgroundImageId: town_demo
-    monsterPrefabId: michela
+    monsterPrefabId: michaela
     startingNodeId: BossNode
     spawnPosition: {x: 7, y: -2, z: 0}
     patternScriptId: patternScript_michaela
@@ -56,9 +56,9 @@ MonoBehaviour:
       currentHp: 100
       isDead: 0
     - monsterId: michaela
-      currentNodeId: node_13
+      currentNodeId: BossNode
       currentHp: 100
       isDead: 0
     playerCurrentHp: 100
     playerCurrentMp: 100
-    luminousGauge: 100
+    luminousGauge: 61
