@@ -13,8 +13,13 @@ namespace DnfSquad.Play.Core
         [SerializeField] private SpriteRenderer backgroundRenderer;
         [SerializeField] private MonsterSpawnController monsterSpawnController;
 
+        /// <summary>플레이어가 현재 입장해 있는 노드 ID (레이드 기능의 "보스 점유 여부" 판정 등에서 사용)</summary>
+        public string CurrentNodeId { get; private set; }
+
         public void EnterNode(string nodeId)
         {
+            CurrentNodeId = nodeId;
+
             string backgroundId = raidRuntimeData.GetNodeBackgroundImageId(nodeId);
             backgroundRenderer.sprite = Resources.Load<Sprite>($"Image/Map/{backgroundId}");
 

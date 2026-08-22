@@ -18,6 +18,9 @@ namespace DnfSquad.Data
         public int playerMaxHp = 100;
         public int playerMaxMp = 100;
 
+        [Header("성광 유지율 (레이드 제한시간, 데모용 고정값)")]
+        public int maxLuminousGauge = 100;
+
         [Header("런타임 상태 (플레이 중 갱신, 저장 대상)")]
         public RaidBoardRuntimeState runtimeState = new RaidBoardRuntimeState();
 
@@ -67,7 +70,8 @@ namespace DnfSquad.Data
             runtimeState = new RaidBoardRuntimeState
             {
                 playerCurrentHp = playerMaxHp,
-                playerCurrentMp = playerMaxMp
+                playerCurrentMp = playerMaxMp,
+                luminousGauge = maxLuminousGauge // 레이드 시작 시 100(=maxLuminousGauge) 부여
             };
 
             foreach (var monster in monsters)

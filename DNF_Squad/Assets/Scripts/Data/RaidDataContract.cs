@@ -64,5 +64,6 @@ namespace DnfSquad.Data
         public List<MonsterRuntimeState> monsterStates = new List<MonsterRuntimeState>();
         public int playerCurrentHp;
         public int playerCurrentMp;
+        public int luminousGauge; // 성광 유지율(레이드 제한시간) 런타임 값
     }
 }

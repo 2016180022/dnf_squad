@@ -15,7 +15,61 @@ MonoBehaviour:
   monsters:
   - monsterId: uriel
     monsterName: "\uC9C4\uB9AC\uC758 \uBD88\uAF43 \uC6B0\uB9AC\uC5D8"
-    tier: 0
+    tier: 1
+    maxHp: 100
+    mapBackgroundImageId: town_demo
+    monsterPrefabId: Uriel_demo
+    startingNodeId: node_1
+    spawnPosition: {x: 7, y: -3, z: 0}
+    patternScriptId: patternScript_uriel
+  - monsterId: raphael
+    monsterName: "\uCE58\uC720\uC758 \uC190\uAE38 \uB77C\uD30C\uC5D8"
+    tier: 1
+    maxHp: 100
+    mapBackgroundImageId: town_demo
+    monsterPrefabId: raphael_demo
+    startingNodeId: node_3
+    spawnPosition: {x: 7, y: -3, z: 0}
+    patternScriptId: patternScript_raphael
+  - monsterId: uriel
+    monsterName: "\uC9C4\uB9AC\uC758 \uBD88\uAF43 \uC6B0\uB9AC\uC5D8"
+    tier: 1
+    maxHp: 100
+    mapBackgroundImageId: town_demo
+    monsterPrefabId: Uriel_demo
+    startingNodeId: node_1
+    spawnPosition: {x: 7, y: -3, z: 0}
+    patternScriptId: patternScript_uriel
+  - monsterId: uriel
+    monsterName: "\uC9C4\uB9AC\uC758 \uBD88\uAF43 \uC6B0\uB9AC\uC5D8"
+    tier: 1
+    maxHp: 100
+    mapBackgroundImageId: town_demo
+    monsterPrefabId: Uriel_demo
+    startingNodeId: node_1
+    spawnPosition: {x: 7, y: -3, z: 0}
+    patternScriptId: patternScript_uriel
+  - monsterId: uriel
+    monsterName: "\uC9C4\uB9AC\uC758 \uBD88\uAF43 \uC6B0\uB9AC\uC5D8"
+    tier: 1
+    maxHp: 100
+    mapBackgroundImageId: town_demo
+    monsterPrefabId: Uriel_demo
+    startingNodeId: node_1
+    spawnPosition: {x: 7, y: -3, z: 0}
+    patternScriptId: patternScript_uriel
+  - monsterId: uriel
+    monsterName: "\uC9C4\uB9AC\uC758 \uBD88\uAF43 \uC6B0\uB9AC\uC5D8"
+    tier: 1
+    maxHp: 100
+    mapBackgroundImageId: town_demo
+    monsterPrefabId: Uriel_demo
+    startingNodeId: node_1
+    spawnPosition: {x: 7, y: -3, z: 0}
+    patternScriptId: patternScript_uriel
+  - monsterId: uriel
+    monsterName: "\uC9C4\uB9AC\uC758 \uBD88\uAF43 \uC6B0\uB9AC\uC5D8"
+    tier: 1
     maxHp: 100
     mapBackgroundImageId: town_demo
     monsterPrefabId: Uriel_demo
@@ -25,8 +79,14 @@ MonoBehaviour:
   defaultNodeBackgroundImageId: town_demo
   playerMaxHp: 100
   playerMaxMp: 100
+  maxLuminousGauge: 100
   runtimeState:
     nodeStates: []
-    monsterStates: []
+    monsterStates:
+    - monsterId: uriel
+      currentNodeId: node_1
+      currentHp: 100
+      isDead: 0
     playerCurrentHp: 100
     playerCurrentMp: 100
+    luminousGauge: 44
