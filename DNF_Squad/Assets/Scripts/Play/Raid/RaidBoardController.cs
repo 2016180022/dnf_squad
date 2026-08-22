@@ -39,6 +39,7 @@ namespace DnfSquad.Play.Raid
         [SerializeField] private MapTransitionController mapTransitionController;
         [SerializeField] private LuminousGaugeController luminousGaugeController;
         [SerializeField] private SanctuaryController sanctuaryController;
+        [SerializeField] private RaidClockController raidClockController;
 
         [Header("투명도 조절")]
         [SerializeField] private CanvasGroup boardCanvasGroup;
@@ -95,6 +96,7 @@ namespace DnfSquad.Play.Raid
                 RefreshNodeVisual(binding, state, monster);
                 RefreshNodeMonsterHp(binding, monster);
                 RefreshNodeSanctuaryState(binding);
+                RefreshNodeSanctuaryTimer(binding);
             }
         }
 
@@ -111,6 +113,13 @@ namespace DnfSquad.Play.Raid
                 selectedNodeId = null;
                 RefreshHighlights();
             }
+        }
+
+        /// <summary>노드의 성역 전환까지 남은 시간을, 방금 스폰된 노드 프리팹의 카운트다운 표시에 반영한다.</summary>
+        private void RefreshNodeSanctuaryTimer(NodeButtonBinding binding)
+        {
+            int remaining = raidRuntimeData.GetSecondsUntilSanctuaryTransition(binding.nodeId, raidClockController.ElapsedSeconds);
+            binding.spawnedVisualPrefab?.SetSanctuaryTimer(remaining);
         }
 
         /// <summary>노드 외형 상태가 바뀌었을 때만 프리팹을 교체한다 (매 프레임 재생성 방지)</summary>

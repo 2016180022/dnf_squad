@@ -670,8 +670,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 240, y: 0}
-  m_SizeDelta: {x: 1200, y: 1200}
+  m_AnchoredPosition: {x: 300, y: 0}
+  m_SizeDelta: {x: 980, y: 980}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &45682745
 MonoBehaviour:
@@ -2848,6 +2848,7 @@ MonoBehaviour:
   mapTransitionController: {fileID: 9106018}
   luminousGaugeController: {fileID: 436176024}
   sanctuaryController: {fileID: 337807272}
+  raidClockController: {fileID: 1826597143}
   boardCanvasGroup: {fileID: 76147912}
   opacitySlider: {fileID: 1442054922}
 --- !u!1 &703387870
@@ -4841,6 +4842,7 @@ Transform:
   - {fileID: 436176023}
   - {fileID: 1826597144}
   - {fileID: 337807271}
+  - {fileID: 1743741656}
   m_Father: {fileID: 1682476329}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1383360601
@@ -6082,6 +6084,89 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DnfSquad.Play.PlayAreaBounds
   min: {x: -9.6, y: -5.4}
   max: {x: 9.6, y: -1.5}
+--- !u!1 &1743741655
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1743741656}
+  - component: {fileID: 1743741658}
+  - component: {fileID: 1743741657}
+  m_Layer: 0
+  m_Name: SanctuaryDebugTools
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1743741656
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1743741655}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1343374067}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1743741657
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1743741655}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e60effa93d3dd140a13ba9c89388e02, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DnfSquad.Play.Raid.SanctuaryTimingLoggerController
+  raidClockController: {fileID: 1826597143}
+  nodeButtons:
+  - nodeId: node_1
+    button: {fileID: 1203156907}
+  - nodeId: node_2
+    button: {fileID: 616674716}
+  - nodeId: node_3
+    button: {fileID: 1461808935}
+  - nodeId: node_4
+    button: {fileID: 1662533630}
+  - nodeId: node_5
+    button: {fileID: 1839011039}
+  - nodeId: node_6
+    button: {fileID: 309894}
+  - nodeId: node_7
+    button: {fileID: 2137994233}
+  - nodeId: node_8
+    button: {fileID: 1063975719}
+  - nodeId: node_9
+    button: {fileID: 1543791134}
+  - nodeId: node_10
+    button: {fileID: 1171305127}
+  - nodeId: node_11
+    button: {fileID: 36625026}
+  - nodeId: node_12
+    button: {fileID: 970314821}
+--- !u!114 &1743741658
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1743741655}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b978c308eee6bb4d961958845317e64, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DnfSquad.Play.Raid.SanctuaryDebugTimeController
 --- !u!1 &1765267798
 GameObject:
   m_ObjectHideFlags: 0

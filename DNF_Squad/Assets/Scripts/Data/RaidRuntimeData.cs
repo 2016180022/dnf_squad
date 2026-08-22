@@ -83,6 +83,30 @@ namespace DnfSquad.Data
             return false;
         }
 
+        /// <summary>성역 시스템 — 이 노드의 다음 활성화/비활성화 전환까지 남은 초. 상시 활성 노드거나 예정된 전환이
+        /// 없으면 -1 (타이머 UI를 끄라는 뜻). 강제 퇴장 규칙(닫힘 초+1에 전환)과 동일한 기준으로 계산한다.</summary>
+        public int GetSecondsUntilSanctuaryTransition(string nodeId, int elapsedSec)
+        {
+            if (alwaysActiveNodeIds.Contains(nodeId)) return -1;
+
+            // 현재 활성 구간 안이면 → 그 구간이 닫히는 시점까지 남은 시간
+            foreach (var window in sanctuaryWindows)
+            {
+                if (window.nodeId == nodeId && elapsedSec >= window.openSec && elapsedSec <= window.closeSec)
+                    return (window.closeSec + 1) - elapsedSec;
+            }
+
+            // 비활성 상태면 → 앞으로 열릴 가장 가까운 구간의 시작 시각까지 남은 시간
+            int nextOpenSec = int.MaxValue;
+            foreach (var window in sanctuaryWindows)
+            {
+                if (window.nodeId == nodeId && window.openSec > elapsedSec && window.openSec < nextOpenSec)
+                    nextOpenSec = window.openSec;
+            }
+
+            return nextOpenSec == int.MaxValue ? -1 : nextOpenSec - elapsedSec;
+        }
+
         // ===== 초기화 =====
 
         /// <summary>플레이 씬 시작 시 마스터 데이터 기준으로 런타임 상태를 새로 채운다</summary>

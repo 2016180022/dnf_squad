@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,6 +19,12 @@ namespace DnfSquad.Play.Raid
         [SerializeField] private Core.ValueGaugeUI luminousGauge;
         [Tooltip("Named/Boss만 보유. 이 노드에 있는 몬스터 아이콘")]
         [SerializeField] private Image bossIcon;
+        [Tooltip("성역 카운트다운 표시 오브젝트 (평소엔 꺼둠). 상시 활성 노드(BossNode/StandbyNode)는 " +
+            "RaidBoardController가 항상 -1을 넘겨서 꺼둔다")]
+        [SerializeField] private GameObject sanctuaryTimerDisplay;
+        [SerializeField] private TMP_Text sanctuaryTimerText;
+
+        private const int SanctuaryTimerShowThresholdSec = 20;
 
         public Core.ValueGaugeUI HpGauge => hpGauge;
         public Core.ValueGaugeUI LuminousGauge => luminousGauge;
@@ -39,6 +46,14 @@ namespace DnfSquad.Play.Raid
                 return;
             }
             bossIcon.sprite = icon;
+        }
+
+        /// <summary>성역 카운트다운 표시. remainingSec가 0 이하이거나 20초 초과면 꺼진다.</summary>
+        public void SetSanctuaryTimer(int remainingSec)
+        {
+            bool show = remainingSec > 0 && remainingSec <= SanctuaryTimerShowThresholdSec;
+            if (sanctuaryTimerDisplay != null) sanctuaryTimerDisplay.SetActive(show);
+            if (show && sanctuaryTimerText != null) sanctuaryTimerText.text = remainingSec.ToString();
         }
     }
 }
