@@ -24,6 +24,8 @@ namespace DnfSquad.Play.Squad
         [SerializeField] private RaidBoardController raidBoardController;
         [SerializeField] private HealthController healthController;
         [SerializeField] private GlobalWarningUI globalWarningUI;
+        // 신규(버그 수정): 계율의 사슬로 몬스터가 이동했을 때 현재 화면을 다시 동기화하기 위해 필요
+        [SerializeField] private MapTransitionController mapTransitionController;
 
         [SerializeField] private string standbyNodeId = "StandbyNode";
 
@@ -200,6 +202,14 @@ namespace DnfSquad.Play.Squad
             }
 
             raidRuntimeData.MoveMonsterToNode(monster.monsterId, userNodeId);
+
+            // 신규(버그 수정): 이동이 현재 화면(출발지 nodeId 또는 도착지 userNodeId)에 영향을 줬다면
+            // 몬스터 스폰 상태를 다시 동기화 — 안 그러면 계율의 사슬로 끌려온 몬스터가 화면에 안 보임.
+            if (nodeId == mapTransitionController.CurrentNodeId || userNodeId == mapTransitionController.CurrentNodeId)
+            {
+                mapTransitionController.RefreshCurrentMonster();
+            }
+
             RefreshSelectedPartyTagInteractable();
             // TODO(계율의 사슬 세부 구현 시): 연출, 쿨타임/사용 횟수 제한 등은 여기 추가 예정.
         }

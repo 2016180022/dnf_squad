@@ -44,6 +44,20 @@ namespace DnfSquad.Play.Core
             CurrentMonsterName = monster.monsterName;
         }
 
+        // 신규(기능 3, 2026-08-22): 현재 스폰된 몬스터의 체력이 0(isDead)이 되면 오브젝트를 지운다.
+        // ClearSpawnedMonster()가 CurrentMonsterId를 null로 만들어주므로, MapMonsterHealthUI는
+        // 별도 수정 없이 기존 로직(CurrentMonsterId 없으면 체력바 숨김)대로 자동으로 꺼진다.
+        private void Update()
+        {
+            if (string.IsNullOrEmpty(CurrentMonsterId)) return;
+
+            var state = raidRuntimeData.GetMonsterState(CurrentMonsterId);
+            if (state != null && state.isDead)
+            {
+                ClearSpawnedMonster();
+            }
+        }
+
         public void ClearSpawnedMonster()
         {
             if (spawnedMonsterObject != null) Destroy(spawnedMonsterObject);

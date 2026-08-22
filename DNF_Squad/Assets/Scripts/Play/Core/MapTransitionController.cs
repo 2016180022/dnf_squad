@@ -32,5 +32,13 @@ namespace DnfSquad.Play.Core
 
             monsterSpawnController.SpawnMonsterAtNode(nodeId);
         }
+
+        // 신규(버그 수정): 계율의 사슬 등 다른 시스템이 몬스터 위치를 바꿨을 때, 그게 현재 보고 있는
+        // 화면(CurrentNodeId)에 영향을 줬다면 호출해서 몬스터 스폰 상태만 다시 동기화한다
+        // (배경 전환은 필요 없으므로 EnterNode 전체를 다시 부르지 않음).
+        public void RefreshCurrentMonster()
+        {
+            monsterSpawnController.SpawnMonsterAtNode(CurrentNodeId);
+        }
     }
 }

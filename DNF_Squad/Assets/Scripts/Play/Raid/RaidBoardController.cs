@@ -44,6 +44,8 @@ namespace DnfSquad.Play.Raid
         [Tooltip("스쿼드 파견 시스템용 — 플레이어(Y) occupant 갱신, 정원 초과 경고에 사용")]
         [SerializeField] private SquadRuntimeData squadRuntimeData;
         [SerializeField] private Core.GlobalWarningUI globalWarningUI;
+        [Tooltip("occupant 조회 실패 시(이론상 발생 안 함) 대비용 fallback — SquadController/SanctuaryController와 동일한 기본값")]
+        [SerializeField] private string standbyNodeId = "StandbyNode";
 
         [Header("투명도 조절")]
         [SerializeField] private CanvasGroup boardCanvasGroup;
@@ -261,7 +263,11 @@ namespace DnfSquad.Play.Raid
             }
 
             string playerCharacterId = squadRuntimeData.runtimeState.composition.memberCharacterIds[0];
-            raidRuntimeData.MoveOccupant(playerCharacterId, mapTransitionController.CurrentNodeId, nodeId);
+            // 신규(버그 수정): "현재 화면 노드"가 아니라 실제 occupant 데이터를 조회해서 출발 노드를 구함
+            // — CurrentNodeId와 occupant 위치가 어긋나는 경우(성역 강제 퇴장 등)에도 정확히 동작하도록.
+            // SquadController.TryDispatch의 R/G 파견과 동일한 패턴.
+            string fromNodeId = raidRuntimeData.FindOccupantNode(playerCharacterId) ?? standbyNodeId;
+            raidRuntimeData.MoveOccupant(playerCharacterId, fromNodeId, nodeId);
 
             boardCanvas.SetActive(false);
             mapTransitionController.EnterNode(nodeId);

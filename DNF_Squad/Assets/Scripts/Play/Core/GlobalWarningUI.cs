@@ -18,9 +18,19 @@ namespace DnfSquad.Play.Core
 
         public void ShowWarning(string message)
         {
-            // 현황판이 닫혀 있는 등 이 오브젝트 자체가 비활성 상태면 StartCoroutine이 예외를 던지므로,
-            // 그런 경우는 그냥 무시한다 (호출부 — LuminousGaugeController 등 — 는 신경 쓰지 않아도 됨).
-            if (!isActiveAndEnabled) return;
+            // 신규(23차): 화면을 가리기 위해 이 오브젝트 자체를 하이어라키에서 비활성 상태로 시작하는
+            // 세팅이 있을 수 있음 — 기존엔 이 경우 그냥 무시했는데, 그러면 영원히 활성화될 기회가 없어
+            // 경고가 한 번도 안 뜨는 문제가 있었다. ShowWarning이 호출되는 시점엔 "지금 당장 보여달라"는
+            // 뜻이므로, 비활성 상태면 스스로 먼저 활성화한다.
+            if (!gameObject.activeSelf) gameObject.SetActive(true);
+
+            // 그래도(상위 부모가 비활성인 경우 등) 여전히 활성화가 안 됐다면 StartCoroutine이 예외를
+            // 던지므로 방어적으로 무시하되, 원인을 알 수 있도록 콘솔에는 남긴다.
+            if (!isActiveAndEnabled)
+            {
+                Debug.LogWarning($"[GlobalWarningUI] 상위 오브젝트가 비활성 상태라 경고를 표시할 수 없습니다: {message}");
+                return;
+            }
 
             warningText.text = message;
             warningRoot.SetActive(true);

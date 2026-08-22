@@ -11,7 +11,12 @@ namespace DnfSquad.Play.Core
     /// </summary>
     public class HealthController : MonoBehaviour
     {
+        // 신규: 보스(우리엘/라파엘) 생존 중 미카엘라 체력 하한 비율(10%)
+        private const float MichaelaHpFloorRatio = 0.1f;
+
         [SerializeField] private RaidRuntimeData raidRuntimeData;
+        // 신규: 미카엘라 10% 하한에 걸렸을 때 안내 문구 표시용
+        [SerializeField] private GlobalWarningUI globalWarningUI;
 
         public int PlayerMaxHp => raidRuntimeData.playerMaxHp;
         public int PlayerMaxMp => raidRuntimeData.playerMaxMp;
@@ -47,8 +52,40 @@ namespace DnfSquad.Play.Core
             var state = raidRuntimeData.GetMonsterState(monsterId);
             if (state == null || state.isDead) return;
 
-            state.currentHp = Mathf.Max(0, state.currentHp - amount);
+            int newHp = Mathf.Max(0, state.currentHp - amount);
+
+            // 신규(규칙 2): 우리엘/라파엘 중 하나라도 살아있으면 미카엘라 체력은
+            // 최대체력의 10% 밑으로 내려가지 않음(=처치 불가)
+            var monster = raidRuntimeData.GetMonster(monsterId);
+            if (monster != null && monster.tier == MonsterTier.Michaela && IsAnyBossAlive())
+            {
+                int hpFloor = Mathf.CeilToInt(monster.maxHp * MichaelaHpFloorRatio);
+                if (newHp < hpFloor)
+                {
+                    newHp = hpFloor;
+                    // 신규(버그 진단 보조): globalWarningUI 인스펙터 연결이 누락된 경우 조용히 무시되지 않고
+                    // 콘솔에 남도록 함(연결이 안 돼 있어도 체력 클램프 자체는 계속 정상 동작해야 하므로 예외를 던지진 않음).
+                    if (globalWarningUI != null)
+                        globalWarningUI.ShowWarning("우리엘 또는 라파엘이 살아있을 경우에는\n미카엘라를 처치할 수 없습니다");
+                    else
+                        Debug.LogWarning("[HealthController] globalWarningUI가 연결되어 있지 않아 미카엘라 하한 경고를 표시할 수 없습니다. 인스펙터에서 연결해주세요.");
+                }
+            }
+
+            state.currentHp = newHp;
             if (state.currentHp <= 0) state.isDead = true;
+        }
+
+        /// <summary>신규: 우리엘/라파엘(Boss 등급) 중 하나라도 살아있는지</summary>
+        private bool IsAnyBossAlive()
+        {
+            foreach (var monster in raidRuntimeData.monsters)
+            {
+                if (monster.tier != MonsterTier.Boss) continue;
+                var state = raidRuntimeData.GetMonsterState(monster.monsterId);
+                if (state != null && !state.isDead) return true;
+            }
+            return false;
         }
 
         /// <summary>지정한 노드에 현재 있는 몬스터에게 데미지를 준다. 몬스터가 없으면 아무 일도 안 함.</summary>
