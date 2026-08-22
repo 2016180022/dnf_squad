@@ -21,6 +21,13 @@ namespace DnfSquad.Data
         [Header("성광 유지율 (레이드 제한시간, 데모용 고정값)")]
         public int maxLuminousGauge = 100;
 
+        [Header("성역(빛의 고리) 시스템 — 노드별 활성 구간 (초 단위 확정값)")]
+        [Tooltip("좌표/고리 파라미터로 매번 역산하지 않고, 이미 확정된 열림~닫힘 초 값을 그대로 저장한다. " +
+            "고리가 레이드 중 여러 바퀴 돌 수 있어서 같은 nodeId가 여러 항목(구간)을 가질 수 있다.")]
+        public List<SanctuaryNodeWindow> sanctuaryWindows = new List<SanctuaryNodeWindow>();
+        [Tooltip("성역 타이머와 무관하게 항상 활성으로 취급할 노드 (BossNode, StandbyNode 등)")]
+        public List<string> alwaysActiveNodeIds = new List<string>();
+
         [Header("런타임 상태 (플레이 중 갱신, 저장 대상)")]
         public RaidBoardRuntimeState runtimeState = new RaidBoardRuntimeState();
 
@@ -60,6 +67,20 @@ namespace DnfSquad.Data
         {
             var monster = GetMonsterAtNode(nodeId);
             return monster != null ? monster.mapBackgroundImageId : defaultNodeBackgroundImageId;
+        }
+
+        /// <summary>성역 시스템 — 이 노드가 주어진 경과시간(초)에 활성 상태인지.
+        /// alwaysActiveNodeIds에 있으면 무조건 활성, 아니면 sanctuaryWindows 중 해당 구간에 걸리는 게 있는지로 판정.</summary>
+        public bool IsNodeActive(string nodeId, int elapsedSec)
+        {
+            if (alwaysActiveNodeIds.Contains(nodeId)) return true;
+
+            foreach (var window in sanctuaryWindows)
+            {
+                if (window.nodeId == nodeId && elapsedSec >= window.openSec && elapsedSec <= window.closeSec)
+                    return true;
+            }
+            return false;
         }
 
         // ===== 초기화 =====

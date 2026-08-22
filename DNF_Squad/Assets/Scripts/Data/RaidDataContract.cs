@@ -28,6 +28,17 @@ namespace DnfSquad.Data
         public string patternScriptId;
     }
 
+    /// <summary>성역(빛의 고리) 시스템 — 노드 하나의 활성 구간 하나(초 단위, 확정값을 그대로 저장).
+    /// 좌표/고리 파라미터로 매번 역산하지 않고, 이미 확정된 값을 그대로 데이터로 들고 있는 방식.
+    /// 고리가 레이드 중 여러 바퀴 돌 수 있어서, 같은 nodeId가 여러 구간(항목)을 가질 수 있다.</summary>
+    [System.Serializable]
+    public class SanctuaryNodeWindow
+    {
+        public string nodeId;
+        public int openSec;   // 이 초부터 활성
+        public int closeSec;  // 이 초까지 활성 (경과시간이 closeSec+1이 되는 순간 강제 퇴장 판정)
+    }
+
     // ========== 런타임 상태 (플레이 중 값이 채워짐) ==========
 
     /// <summary>발판에 입장해 있는 스쿼드원 1명</summary>
@@ -43,6 +54,9 @@ namespace DnfSquad.Data
     public class RaidNodeRuntimeState
     {
         public string nodeId;
+        // TODO(스쿼드 멤버 강제 퇴장): 성역 노드가 닫힐 때 occupants를 전부 대기 노드로 옮기는 처리가
+        // 필요함 (SanctuaryController.OnNodeClosed 참고). occupant 입장 UI를 만들 때 함께 구현 예정 —
+        // 예: RaidRuntimeData.EvacuateOccupants(nodeId, standbyNodeId) 같은 메서드 추가.
         public List<RaidNodeOccupant> occupants = new List<RaidNodeOccupant>();
     }
 

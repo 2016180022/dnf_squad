@@ -80,6 +80,88 @@ MonoBehaviour:
   playerMaxHp: 100
   playerMaxMp: 100
   maxLuminousGauge: 100
+  sanctuaryWindows:
+  - nodeId: node_1
+    openSec: 13
+    closeSec: 137
+  - nodeId: node_1
+    openSec: 313
+    closeSec: 437
+  - nodeId: node_2
+    openSec: 88
+    closeSec: 212
+  - nodeId: node_2
+    openSec: 388
+    closeSec: 512
+  - nodeId: node_3
+    openSec: 163
+    closeSec: 287
+  - nodeId: node_3
+    openSec: 463
+    closeSec: 587
+  - nodeId: node_4
+    openSec: 0
+    closeSec: 62
+  - nodeId: node_4
+    openSec: 238
+    closeSec: 362
+  - nodeId: node_4
+    openSec: 538
+    closeSec: 600
+  - nodeId: node_5
+    openSec: 2
+    closeSec: 73
+  - nodeId: node_5
+    openSec: 302
+    closeSec: 373
+  - nodeId: node_6
+    openSec: 77
+    closeSec: 148
+  - nodeId: node_6
+    openSec: 377
+    closeSec: 448
+  - nodeId: node_7
+    openSec: 152
+    closeSec: 223
+  - nodeId: node_7
+    openSec: 452
+    closeSec: 523
+  - nodeId: node_8
+    openSec: 227
+    closeSec: 298
+  - nodeId: node_8
+    openSec: 527
+    closeSec: 598
+  - nodeId: node_9
+    openSec: 50
+    closeSec: 100
+  - nodeId: node_9
+    openSec: 350
+    closeSec: 400
+  - nodeId: node_10
+    openSec: 125
+    closeSec: 175
+  - nodeId: node_10
+    openSec: 425
+    closeSec: 475
+  - nodeId: node_11
+    openSec: 200
+    closeSec: 250
+  - nodeId: node_11
+    openSec: 500
+    closeSec: 550
+  - nodeId: node_12
+    openSec: 0
+    closeSec: 25
+  - nodeId: node_12
+    openSec: 275
+    closeSec: 325
+  - nodeId: node_12
+    openSec: 575
+    closeSec: 600
+  alwaysActiveNodeIds:
+  - BossNode
+  - StandbyNode
   runtimeState:
     nodeStates: []
     monsterStates:

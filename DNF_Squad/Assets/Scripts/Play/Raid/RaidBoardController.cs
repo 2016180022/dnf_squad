@@ -38,6 +38,7 @@ namespace DnfSquad.Play.Raid
         [SerializeField] private Button enterButton;
         [SerializeField] private MapTransitionController mapTransitionController;
         [SerializeField] private LuminousGaugeController luminousGaugeController;
+        [SerializeField] private SanctuaryController sanctuaryController;
 
         [Header("투명도 조절")]
         [SerializeField] private CanvasGroup boardCanvasGroup;
@@ -93,6 +94,22 @@ namespace DnfSquad.Play.Raid
 
                 RefreshNodeVisual(binding, state, monster);
                 RefreshNodeMonsterHp(binding, monster);
+                RefreshNodeSanctuaryState(binding);
+            }
+        }
+
+        /// <summary>성역 시스템상 비활성 노드는 버튼 자체를 선택 불가(interactable=false) 처리 — 별도 경고문 없이
+        /// 하이라이트가 아예 뜨지 않는 것으로 구분한다. 선택돼 있던 노드가 방금 비활성화된 경우엔 선택도 해제해서
+        /// 닫힌 노드로 '진입'하는 것을 막는다.</summary>
+        private void RefreshNodeSanctuaryState(NodeButtonBinding binding)
+        {
+            bool active = sanctuaryController.IsNodeActive(binding.nodeId);
+            binding.button.interactable = active;
+
+            if (!active && binding.nodeId == selectedNodeId)
+            {
+                selectedNodeId = null;
+                RefreshHighlights();
             }
         }
 
