@@ -93,6 +93,8 @@ MonoBehaviour:
     descriptionTemplate: "\uC2A4\uCFFC\uB4DC \uB9AC\uB354\uAC00 \uB4F1\uC7A5\uD558\uC5EC
       10\uCD08\uAC04 \uB4F1\uB85D\uB41C \uC2A4\uD0AC \uCCB4\uC778\uB300\uB85C \uACF5\uACA9\uD55C\uB2E4."
     baseValues: []
+    spawnAnchor: 0
+    effectType: 1
   - skillId: 26002
     skillName: "\uD328\uD134 \uC870\uB825"
     skillType: 0
@@ -104,6 +106,8 @@ MonoBehaviour:
       \uB300\uC0C1\uC5D0\uAC8C \uB370\uBBF8\uC9C0\uB97C \uC8FC\uBA70 \uBB34\uB825\uD654
       \uAC8C\uC774\uC9C0\uB97C \uAC10\uC18C\uC2DC\uD0A8\uB2E4."
     baseValues: []
+    spawnAnchor: 0
+    effectType: 0
   - skillId: 26003
     skillName: "\uB9AC\uB354 \uAC01\uC131\uAE30"
     skillType: 0
@@ -117,6 +121,8 @@ MonoBehaviour:
       \uC2DC\uC804\uD558\uC5EC \uB370\uBBF8\uC9C0\uB97C \uC900\uB2E4."
     baseValues:
     - 3
+    spawnAnchor: 0
+    effectType: 0
   - skillId: 26004
     skillName: "\uBC84\uD37C \uD68C\uBCF5"
     skillType: 1
@@ -128,6 +134,8 @@ MonoBehaviour:
       \uCCB4\uB825 \uBC0F \uB9C8\uB098\uB97C {0}% \uD68C\uBCF5\uC2DC\uD0A8\uB2E4."
     baseValues:
     - 30
+    spawnAnchor: 1
+    effectType: 2
   - skillId: 26005
     skillName: "\uBC84\uD37C \uBD80\uD65C"
     skillType: 1
@@ -137,6 +145,8 @@ MonoBehaviour:
       \uC0AC\uC6A9 \uAC00\uB2A5"
     descriptionTemplate: "\uD50C\uB808\uC774\uC5B4\uB97C \uC989\uC2DC \uBD80\uD65C\uC2DC\uD0A8\uB2E4."
     baseValues: []
+    spawnAnchor: 0
+    effectType: 0
   - skillId: 26006
     skillName: "\uBC84\uD37C \uAC01\uC131\uAE30"
     skillType: 1
@@ -147,6 +157,8 @@ MonoBehaviour:
       \uAC01\uC131\uAE30\uB97C \uC2DC\uC804\uD55C\uB2E4. \uD50C\uB808\uC774\uC5B4\uC5D0\uAC8C
       \uB9C9\uB300\uD55C \uC591\uC758 \uBC84\uD504\uB97C \uC81C\uACF5\uD55C\uB2E4."
     baseValues: []
+    spawnAnchor: 0
+    effectType: 0
   squadBuffs:
   - buffId: 26101
     buffName: "\uAC00\uC7A5 \uAC15\uD55C \uB188\uC740 \uB204\uAD6C\uB0D0?"
@@ -452,7 +464,7 @@ MonoBehaviour:
     - slotIndex: 5
       skillId: 26006
     leaderSkillChain: []
-    leaderSkillChainTotalDamage: 0
+    leaderSkillChainTotalDamage: 92
     buffProgress:
     - buffId: 26112
       currentLevel: 0
@@ -473,3 +485,8 @@ MonoBehaviour:
     - buffId: 26102
       currentLevel: 0
     squadPoints: 1000
+  skillCooldowns:
+  - skillId: 26004
+    remainingSeconds: 7.5043716
+  - skillId: 26001
+    remainingSeconds: 26.981333

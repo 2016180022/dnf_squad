@@ -22,6 +22,9 @@ namespace DnfSquad.Data
         [Header("런타임 상태 (플레이어가 세팅, 저장/복원 대상)")]
         public SquadRuntimeState runtimeState = new SquadRuntimeState();
 
+        [Header("PlayScene 전용 — 스킬 쿨타임 (저장 대상 아님, 레이드 시작 시 초기화)")]
+        public List<SquadSkillCooldownState> skillCooldowns = new List<SquadSkillCooldownState>();
+
         // ===== 조회 헬퍼 =====
 
         public AdventurerCharacterData GetCharacter(string characterId)
@@ -66,6 +69,39 @@ namespace DnfSquad.Data
         public void ResetRuntimeState()
         {
             runtimeState = new SquadRuntimeState();
+        }
+
+        // ===== 스킬 쿨타임 헬퍼 (PlayScene 전용, 세이브 대상 아님) =====
+
+        public float GetRemainingCooldown(string skillId)
+        {
+            var state = skillCooldowns.FirstOrDefault(c => c.skillId == skillId);
+            return state?.remainingSeconds ?? 0f;
+        }
+
+        public void StartCooldown(string skillId, float seconds)
+        {
+            var state = skillCooldowns.FirstOrDefault(c => c.skillId == skillId);
+            if (state == null)
+            {
+                state = new SquadSkillCooldownState { skillId = skillId };
+                skillCooldowns.Add(state);
+            }
+            state.remainingSeconds = seconds;
+        }
+
+        public void TickCooldowns(float deltaTime)
+        {
+            foreach (var state in skillCooldowns)
+            {
+                state.remainingSeconds = Mathf.Max(0f, state.remainingSeconds - deltaTime);
+            }
+        }
+
+        /// <summary>레이드 시작 시 호출 — 이전 레이드에서 남아있던 쿨타임을 전부 비움</summary>
+        public void ResetSkillCooldowns()
+        {
+            skillCooldowns.Clear();
         }
     }
 }

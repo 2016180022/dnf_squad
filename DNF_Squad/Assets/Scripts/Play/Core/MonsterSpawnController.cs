@@ -20,6 +20,9 @@ namespace DnfSquad.Play.Core
         /// <summary>현재 맵에 스폰돼 있는 몬스터 이름. 없으면 null.</summary>
         public string CurrentMonsterName { get; private set; }
 
+        /// <summary>현재 맵에 스폰돼 있는 몬스터의 Transform. 없으면 null. (스쿼드 스킬 연출 등장 위치 계산용)</summary>
+        public Transform CurrentMonsterTransform => spawnedMonsterObject != null ? spawnedMonsterObject.transform : null;
+
         /// <summary>지정한 노드에 현재 있는 몬스터를 스폰. 몬스터가 없으면 기존 오브젝트만 정리하고 끝.</summary>
         public void SpawnMonsterAtNode(string nodeId)
         {

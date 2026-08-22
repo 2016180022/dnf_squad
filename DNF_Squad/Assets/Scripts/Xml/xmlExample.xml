@@ -1,0 +1,6 @@
+
+//플레이어가 공격하는 스킬 예시
+<Skill1>
+    <Type = "Appear" Time = "0.0" Pos = "-4, -1"/>
+    <Type = "Attack" Time = "0.5" Damage = "getSO(LeaderSkillChainTotalDamage)", >
+</Skill1>

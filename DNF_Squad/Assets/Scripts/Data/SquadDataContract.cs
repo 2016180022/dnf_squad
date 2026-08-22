@@ -34,6 +34,10 @@ namespace DnfSquad.Data
         // description → descriptionTemplate + baseValues 로 분리 (버프로 수치가 변경되므로)
         public string descriptionTemplate; // 예: "스쿼드 리더가 등장하여 스킬 체인대로 공격한다\n쿨타임 {0}초"
         public float[] baseValues;         // 템플릿의 {0}, {1}... 자리에 들어갈 버프 미적용 기본 수치
+
+        // ===== PlayScene 구현용 (표시와 무관, 스킬 사용 시 실제 동작을 결정) =====
+        public SquadSkillSpawnAnchor spawnAnchor; // 스킬 사용 시 리더/버퍼가 등장할 위치
+        public SquadSkillEffectType effectType;   // 실제로 어떤 효과를 낼지 (None = 아직 미구현, 발동 자체를 하지 않음)
     }
 
     /// <summary>스쿼드 버프(보조/강화 요소) 정의</summary>
@@ -105,6 +109,8 @@ namespace DnfSquad.Data
     }
 
     public enum SquadSkillType { Attack, Support }
+    public enum SquadSkillSpawnAnchor { NearBoss, NearPlayer } // 스킬 사용 시 리더/버퍼가 등장할 위치
+    public enum SquadSkillEffectType { None, LeaderChainDamage, HealPlayerPercent } // None = 아직 미구현
     public enum SquadBuffCategory { Assist, Enhance }
     public enum SquadBuffSlotType { Active, Passive }
 
@@ -165,6 +171,17 @@ namespace DnfSquad.Data
     {
         public string buffId;
         public int currentLevel; // 0 = 미보유, 1~3 = 레벨
+    }
+
+    /// <summary>
+    /// 스쿼드 스킬 1개의 남은 쿨타임. PlayScene 전용 — 세이브 대상인 SquadRuntimeState와는 별개로
+    /// SquadRuntimeData에 직접 둔다 (레이드 중에만 의미 있는 값이라 저장/복원 대상이 아님).
+    /// </summary>
+    [System.Serializable]
+    public class SquadSkillCooldownState
+    {
+        public string skillId;
+        public float remainingSeconds;
     }
 
     /// <summary>SettingScene 전체가 다루는 런타임 데이터 묶음</summary>

@@ -18,6 +18,10 @@ namespace DnfSquad.Play.Core
 
         public void ShowWarning(string message)
         {
+            // 현황판이 닫혀 있는 등 이 오브젝트 자체가 비활성 상태면 StartCoroutine이 예외를 던지므로,
+            // 그런 경우는 그냥 무시한다 (호출부 — LuminousGaugeController 등 — 는 신경 쓰지 않아도 됨).
+            if (!isActiveAndEnabled) return;
+
             warningText.text = message;
             warningRoot.SetActive(true);
 
