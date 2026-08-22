@@ -48,6 +48,41 @@ MonoBehaviour:
     fame: 74439
     remainingEntryCount: 1
     ingredientCount: 381
+  - characterId: 2026006
+    characterName: "\uAC10\uC5FC\uC99D\uC0C1"
+    jobName: "\uC9C4 \uBBF8\uC2A4\uD2B8\uB9AC\uC2A4"
+    gearScore: 300575
+    fame: 122766
+    remainingEntryCount: 1
+    ingredientCount: 3719
+  - characterId: 2026007
+    characterName: "\uD658\uAC01\uC99D\uC0C1"
+    jobName: "\uC9C4 \uD328\uB7EC\uBA54\uB515"
+    gearScore: 126917
+    fame: 120277
+    remainingEntryCount: 1
+    ingredientCount: 192
+  - characterId: 2026008
+    characterName: "\uB2E8\uD64D\uC124\uB828"
+    jobName: "\uC9C4 \uB2E4\uD06C\uD15C\uD50C\uB7EC"
+    gearScore: 258412
+    fame: 121887
+    remainingEntryCount: 1
+    ingredientCount: 1000
+  - characterId: 2026009
+    characterName: "\uC57C\uB9C8\uB124\uC544\uC57C"
+    jobName: "\uC9C4 \uC18C\uD658\uC0AC"
+    gearScore: 139238
+    fame: 117695
+    remainingEntryCount: 1
+    ingredientCount: 29
+  - characterId: 2026010
+    characterName: "\uBC94\uC704\uAC00\uB113\uC5B4\uC694"
+    jobName: "\uC9C4 \uBE0C\uB808\uC774\uCEE4 "
+    gearScore: 149963
+    fame: 117528
+    remainingEntryCount: 1
+    ingredientCount: 19291
   squadSkills:
   - skillId: 26001
     skillName: "\uC804\uD22C \uC870\uB825"

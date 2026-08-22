@@ -26,7 +26,7 @@ namespace DnfSquad.UI
             CharacterData = data;
             dragLayer = dragLayerRoot;
 
-            portraitImage.sprite = Resources.Load<Sprite>($"Image/Portrait/{data.characterId}");
+            portraitImage.sprite = Resources.Load<Sprite>($"Image/Portrait/{data.characterId}_portrait");
             nameText.text = data.characterName;
             jobNameText.text = data.jobName;
             gearScoreText.text = data.gearScore.ToString();

@@ -28,6 +28,10 @@ namespace DnfSquad.Data
         [Tooltip("성역 타이머와 무관하게 항상 활성으로 취급할 노드 (BossNode, StandbyNode 등)")]
         public List<string> alwaysActiveNodeIds = new List<string>();
 
+        [Header("정원(동시 입장 인원 제한) — 기본 1명, 아래 목록에 있는 노드만 3명")]
+        [Tooltip("스탠바이 노드, 보스 노드처럼 스쿼드원이 여러 명 동시에 들어갈 수 있는 노드")]
+        public List<string> highCapacityNodeIds = new List<string> { "StandbyNode", "BossNode" };
+
         [Header("런타임 상태 (플레이 중 갱신, 저장 대상)")]
         public RaidBoardRuntimeState runtimeState = new RaidBoardRuntimeState();
 
@@ -138,6 +142,56 @@ namespace DnfSquad.Data
         {
             var state = GetMonsterState(monsterId);
             if (state != null) state.currentNodeId = targetNodeId;
+        }
+
+        // ===== 스쿼드 파견 — 노드 정원/occupant 관리 =====
+
+        private const int DefaultNodeCapacity = 1;
+        private const int HighNodeCapacity = 3;
+
+        /// <summary>이 노드의 최대 동시 입장 인원. highCapacityNodeIds에 있으면 3, 아니면 1</summary>
+        public int GetNodeCapacity(string nodeId) =>
+            highCapacityNodeIds.Contains(nodeId) ? HighNodeCapacity : DefaultNodeCapacity;
+
+        /// <summary>이 노드에 지금 한 명 더 들어갈 수 있는지 (정원 체크)</summary>
+        public bool CanAddOccupant(string nodeId) =>
+            GetOrCreateNodeState(nodeId).occupants.Count < GetNodeCapacity(nodeId);
+
+        /// <summary>정원 체크 없이 그대로 추가 — 호출부가 CanAddOccupant로 미리 확인했거나,
+        /// 레이드 시작 시 최초 배치처럼 체크가 필요 없는 경우에 사용</summary>
+        public void AddOccupant(string nodeId, string characterId, SlotRole role = SlotRole.Member)
+        {
+            if (string.IsNullOrEmpty(characterId)) return;
+            GetOrCreateNodeState(nodeId).occupants.Add(new RaidNodeOccupant { characterId = characterId, role = role });
+        }
+
+        public void RemoveOccupant(string nodeId, string characterId)
+        {
+            GetNodeState(nodeId)?.occupants.RemoveAll(o => o.characterId == characterId);
+        }
+
+        /// <summary>occupant를 한 노드에서 다른 노드로 옮긴다. 대상 노드 정원 체크는 호출부 책임.</summary>
+        public void MoveOccupant(string characterId, string fromNodeId, string toNodeId)
+        {
+            var fromRole = GetNodeState(fromNodeId)?.occupants.FirstOrDefault(o => o.characterId == characterId)?.role ?? SlotRole.Member;
+            RemoveOccupant(fromNodeId, characterId);
+            AddOccupant(toNodeId, characterId, fromRole);
+        }
+
+        /// <summary>이 캐릭터가 현재 어느 노드에 있는지. 어디에도 없으면 null</summary>
+        public string FindOccupantNode(string characterId) =>
+            runtimeState.nodeStates.FirstOrDefault(s => s.occupants.Any(o => o.characterId == characterId))?.nodeId;
+
+        /// <summary>성역 노드가 닫힐 때 그 노드에 있던 스쿼드원을 전부 대기 노드로 강제 이동</summary>
+        public void EvacuateOccupants(string nodeId, string standbyNodeId)
+        {
+            var state = GetNodeState(nodeId);
+            if (state == null || state.occupants.Count == 0) return;
+
+            var toMove = new List<RaidNodeOccupant>(state.occupants);
+            state.occupants.Clear();
+            foreach (var occupant in toMove)
+                AddOccupant(standbyNodeId, occupant.characterId, occupant.role);
         }
     }
 }

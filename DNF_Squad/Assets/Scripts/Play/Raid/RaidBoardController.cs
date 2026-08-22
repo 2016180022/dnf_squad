@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -40,6 +41,9 @@ namespace DnfSquad.Play.Raid
         [SerializeField] private LuminousGaugeController luminousGaugeController;
         [SerializeField] private SanctuaryController sanctuaryController;
         [SerializeField] private RaidClockController raidClockController;
+        [Tooltip("스쿼드 파견 시스템용 — 플레이어(Y) occupant 갱신, 정원 초과 경고에 사용")]
+        [SerializeField] private SquadRuntimeData squadRuntimeData;
+        [SerializeField] private Core.GlobalWarningUI globalWarningUI;
 
         [Header("투명도 조절")]
         [SerializeField] private CanvasGroup boardCanvasGroup;
@@ -47,10 +51,22 @@ namespace DnfSquad.Play.Raid
 
         private string selectedNodeId;
 
-        private void Start()
+        public string SelectedNodeId => selectedNodeId;
+        public IReadOnlyList<NodeButtonBinding> NodeBindings => nodeButtons;
+
+        /// <summary>노드 외형 프리팹이 새로 스폰될 때마다 발생 (Squad 기능이 그 프리팹의 파견 버튼에
+        /// 동작을 연결할 수 있도록). RaidBoardController는 구독자가 누구인지 전혀 모른다(단방향 의존 유지).</summary>
+        public event Action<NodeButtonBinding> OnNodeVisualSpawned;
+
+        /// <summary>Awake는 씬의 모든 오브젝트에서 Start보다 항상 먼저 실행되므로, 다른 컨트롤러(SquadController 등)가
+        /// Start()에서 runtimeState(occupants 포함)를 안전하게 사용할 수 있도록 초기화를 여기로 옮겨둔다.</summary>
+        private void Awake()
         {
             raidRuntimeData.InitializeRuntimeState();
+        }
 
+        private void Start()
+        {
             foreach (var binding in nodeButtons)
             {
                 string nodeId = binding.nodeId; // 클로저 캡처용 로컬 변수
@@ -95,24 +111,37 @@ namespace DnfSquad.Play.Raid
 
                 RefreshNodeVisual(binding, state, monster);
                 RefreshNodeMonsterHp(binding, monster);
-                RefreshNodeSanctuaryState(binding);
+                RefreshNodeSelectability(binding);
                 RefreshNodeSanctuaryTimer(binding);
             }
+
+            RefreshEnterButtonState();
         }
 
-        /// <summary>성역 시스템상 비활성 노드는 버튼 자체를 선택 불가(interactable=false) 처리 — 별도 경고문 없이
-        /// 하이라이트가 아예 뜨지 않는 것으로 구분한다. 선택돼 있던 노드가 방금 비활성화된 경우엔 선택도 해제해서
-        /// 닫힌 노드로 '진입'하는 것을 막는다.</summary>
-        private void RefreshNodeSanctuaryState(NodeButtonBinding binding)
-        {
-            bool active = sanctuaryController.IsNodeActive(binding.nodeId);
-            binding.button.interactable = active;
+        /// <summary>이 노드에 지금 파견/진입할 수 있는지(=성역 활성 상태인지). 계율의 사슬은 노드가 닫혀 있어도
+        /// 걸 수 있어야 하므로(닫힌 노드의 몬스터를 끌어오는 게 계율의 사슬의 존재 이유) 이 체크와는 무관하다.</summary>
+        public bool CanEnterNode(string nodeId) => sanctuaryController.IsNodeActive(nodeId);
 
-            if (!active && binding.nodeId == selectedNodeId)
+        /// <summary>플레이어가 이미 입장해 있는 노드는 버튼 자체를 선택 불가(interactable=false) 처리해서
+        /// 재입장을 막는다. (2026-08-22, 17차 변경) 성역 비활성 상태는 더 이상 "선택" 자체를 막지 않음 —
+        /// 닫힌 노드의 몬스터에게도 계율의 사슬을 걸 수 있어야 하므로, 성역 상태는 파견/진입(아랫줄) 버튼
+        /// 쪽(CanEnterNode)에서만 체크한다.</summary>
+        private void RefreshNodeSelectability(NodeButtonBinding binding)
+        {
+            bool isCurrentNode = binding.nodeId == mapTransitionController.CurrentNodeId;
+            binding.button.interactable = !isCurrentNode;
+
+            if (isCurrentNode && binding.nodeId == selectedNodeId)
             {
                 selectedNodeId = null;
                 RefreshHighlights();
             }
+        }
+
+        /// <summary>현황판 하단 '진입' 버튼도 선택된 노드가 지금 입장 가능한 상태일 때만 눌리도록 동기화한다.</summary>
+        private void RefreshEnterButtonState()
+        {
+            enterButton.interactable = !string.IsNullOrEmpty(selectedNodeId) && CanEnterNode(selectedNodeId);
         }
 
         /// <summary>노드의 성역 전환까지 남은 시간을, 방금 스폰된 노드 프리팹의 카운트다운 표시에 반영한다.</summary>
@@ -143,6 +172,8 @@ namespace DnfSquad.Play.Raid
             binding.spawnedVisualPrefab?.SetHighlighted(binding.nodeId == selectedNodeId);
             // Named/Boss로 바뀐 경우, 그 노드에 있는 몬스터 아이콘을 동기화
             if (monster != null) binding.spawnedVisualPrefab?.SetMonsterIcon(monster.monsterId);
+
+            OnNodeVisualSpawned?.Invoke(binding);
         }
 
         /// <summary>이번에 스폰된 노드 프리팹 안에 체력 게이지가 있으면(=네임드/보스) 값을 갱신하고, 미카엘라 노드면 위치 고정 카운트다운 게이지도 갱신한다</summary>
@@ -207,9 +238,33 @@ namespace DnfSquad.Play.Raid
         private void EnterSelectedNode()
         {
             if (string.IsNullOrEmpty(selectedNodeId)) return;
+            TryEnterNode(selectedNodeId);
+        }
+
+        /// <summary>지정한 노드로 플레이어(Y)를 실제로 이동시킨다 — 정원 체크 + occupant 갱신 + 배경/몬스터 전환.
+        /// 현황판 하단 '진입' 버튼과, 파견 UI의 노란(Y) 버튼이 공통으로 사용한다(Y는 파견이 아니라 직접 이동이므로).</summary>
+        public void TryEnterNode(string nodeId)
+        {
+            // 성역 비활성 노드 방어 체크 (2026-08-22, 17차 추가) — 버튼이 정상적으로 비활성화돼 있었다면
+            // 애초에 호출되지 않았겠지만, 방어적으로 한 번 더 확인한다.
+            if (!CanEnterNode(nodeId))
+            {
+                globalWarningUI.ShowWarning("지금은 이 노드에 입장할 수 없습니다");
+                return;
+            }
+
+            // 정원 체크 (2026-08-22 추가) — 플레이어(Y)도 R/G와 동일하게 노드 정원 대상.
+            if (!raidRuntimeData.CanAddOccupant(nodeId))
+            {
+                globalWarningUI.ShowWarning("정원 초과로 입장할 수 없습니다");
+                return;
+            }
+
+            string playerCharacterId = squadRuntimeData.runtimeState.composition.memberCharacterIds[0];
+            raidRuntimeData.MoveOccupant(playerCharacterId, mapTransitionController.CurrentNodeId, nodeId);
 
             boardCanvas.SetActive(false);
-            mapTransitionController.EnterNode(selectedNodeId);
+            mapTransitionController.EnterNode(nodeId);
         }
     }
 }

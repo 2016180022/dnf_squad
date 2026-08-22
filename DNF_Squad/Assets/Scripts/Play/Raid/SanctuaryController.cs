@@ -30,9 +30,12 @@ namespace DnfSquad.Play.Raid
             timedNodeIds = raidRuntimeData.sanctuaryWindows.Select(w => w.nodeId).Distinct().ToList();
         }
 
-        /// <summary>이 노드가 지금(현재 경과시간 기준) 활성 상태인지. RaidBoardController가 노드 선택 가능 여부에 사용.</summary>
+        /// <summary>이 노드가 지금(현재 경과시간 기준) 활성 상태인지. RaidBoardController가 파견/진입 가능 여부에 사용.
+        /// 대기 노드는 성역 타이머와 무관하게 항상 활성이어야 하는 스펙 확정 사항이라, `alwaysActiveNodeIds`
+        /// 데이터 설정에만 기대지 않고 코드에서도 예외로 보장한다(2026-08-22, 17차).</summary>
         public bool IsNodeActive(string nodeId)
         {
+            if (nodeId == standbyNodeId) return true;
             return raidRuntimeData.IsNodeActive(nodeId, raidClockController.ElapsedSeconds);
         }
 
@@ -63,8 +66,9 @@ namespace DnfSquad.Play.Raid
                 mapTransitionController.EnterNode(standbyNodeId);
             }
 
-            // TODO(스쿼드 멤버 강제 퇴장): occupant 입장 UI 구현 시, 이 노드에 있던 occupant들을 전부
-            // 대기 노드(standbyNodeId)로 옮기는 처리 추가. 예: raidRuntimeData.EvacuateOccupants(nodeId, standbyNodeId);
+            // 2026-08-22: 스쿼드 파견 시스템(occupants) 도입에 맞춰 강제 퇴장 처리 반영.
+            // 플레이어(Y)를 포함해 이 노드에 있던 occupant 전원을 대기 노드로 옮긴다.
+            raidRuntimeData.EvacuateOccupants(nodeId, standbyNodeId);
         }
     }
 }

@@ -23,11 +23,17 @@ namespace DnfSquad.Play.Raid
             "RaidBoardController가 항상 -1을 넘겨서 꺼둔다")]
         [SerializeField] private GameObject sanctuaryTimerDisplay;
         [SerializeField] private TMP_Text sanctuaryTimerText;
+        [Tooltip("파견/계율의 사슬 명령 버튼 6개 — 모든 노드 프리팹(Empty/Named/Boss)에 배치, 선택 시에만 표시")]
+        [SerializeField] private NodePartyTagUI partyTag;
+        [Tooltip("현재 이 노드에 있는 스쿼드원 R/Y/G 표시 — 모든 노드 프리팹에 3개 다 배치")]
+        [SerializeField] private NodeOccupantTagUI nowTag;
 
         private const int SanctuaryTimerShowThresholdSec = 20;
 
         public Core.ValueGaugeUI HpGauge => hpGauge;
         public Core.ValueGaugeUI LuminousGauge => luminousGauge;
+        public NodePartyTagUI PartyTag => partyTag;
+        public NodeOccupantTagUI NowTag => nowTag;
 
         public void SetHighlighted(bool highlighted)
         {
