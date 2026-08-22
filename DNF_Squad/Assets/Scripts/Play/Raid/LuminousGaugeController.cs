@@ -25,6 +25,8 @@ namespace DnfSquad.Play.Raid
 
         [SerializeField] private RaidRuntimeData raidRuntimeData;
         [SerializeField] private MapTransitionController mapTransitionController;
+        [Tooltip("보스 비점유/미카엘라 위치 고정으로 성광 유지율이 감소될 때 안내 문구를 띄우는 데 사용")]
+        [SerializeField] private GlobalWarningUI globalWarningUI;
 
         /// <summary>감소량에 곱해지는 배율. 감소량을 낮추는 스쿼드 스킬 등이 외부에서 조정 (기본 1 = 원래 그대로).</summary>
         public float DecayMultiplier { get; set; } = 1f;
@@ -96,6 +98,8 @@ namespace DnfSquad.Play.Raid
                 {
                     timer -= BossUnoccupiedDecayInterval;
                     DecreaseGauge(BossUnoccupiedDecayAmount);
+                    // 2026-08-22: 보스 비점유로 성광 유지율이 감소하는 순간 안내 문구 표시
+                    globalWarningUI.ShowWarning("보스 몬스터 60초 비점유 시,\\n 성광 유지율이 감소됩니다");
                 }
                 bossUnoccupiedTimers[boss.monsterId] = timer;
             }
@@ -121,6 +125,8 @@ namespace DnfSquad.Play.Raid
             {
                 fixedPositionTimer -= FixedPositionDecayInterval;
                 DecreaseGauge(FixedPositionDecayAmount);
+                // 2026-08-22: 미카엘라 위치 고정으로 성광 유지율이 감소하는 순간 안내 문구 표시
+                globalWarningUI.ShowWarning("미카엘라의 위치가 30초간 고정되어 있을 경우,\\n 성광 유지율이 감소됩니다");
             }
         }
 

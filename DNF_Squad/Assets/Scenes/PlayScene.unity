@@ -1739,6 +1739,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DnfSquad.Play.Raid.LuminousGaugeController
   raidRuntimeData: {fileID: 11400000, guid: 892f4a53c863886489cad6c51b9c6a60, type: 2}
   mapTransitionController: {fileID: 9106018}
+  globalWarningUI: {fileID: 1005917625}
 --- !u!1 &451735138
 GameObject:
   m_ObjectHideFlags: 0
@@ -4676,7 +4677,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 500, y: 100}
+  m_SizeDelta: {x: 700, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1100515024
 MonoBehaviour:
@@ -9132,10 +9133,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1005917622}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 700, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2133763613
 MonoBehaviour:
@@ -9157,7 +9158,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uD574\uB2F9 \uC704\uCE58\uB85C\uB294 \uC774\uB3D9\uD560 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4"
+  m_text: "\uACBD\uACE0 \uD14D\uC2A4\uD2B8"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: ec8e49d635b297f40a572e81bca025e8, type: 2}
   m_sharedMaterial: {fileID: -4436577298637372222, guid: ec8e49d635b297f40a572e81bca025e8, type: 2}

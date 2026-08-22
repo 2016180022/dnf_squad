@@ -130,9 +130,11 @@ namespace DnfSquad.Play.Squad
 
             // 계율의 사슬: 대상 노드에 몬스터가 있어야 하고, 끌어올 목적지(사용자 자신의 노드)에는
             // 몬스터가 없어야 함 — 몬스터 2마리가 같은 노드에 겹치는 걸 막기 위함.
-            bool chainR = hasMonster && HasNoMonster(rNodeId);
-            bool chainY = hasMonster && HasNoMonster(yNodeId);
-            bool chainG = hasMonster && HasNoMonster(gNodeId);
+            // (2026-08-22, 18차) 목적지가 스탠바이노드인 경우도 추가로 막는다 — 대기 구역은 항상
+            // 몬스터가 없어야 하는 안전지대이므로, 겹침 여부와 무관하게 계율의 사슬 대상에서 제외.
+            bool chainR = hasMonster && HasNoMonster(rNodeId) && rNodeId != standbyNodeId;
+            bool chainY = hasMonster && HasNoMonster(yNodeId) && yNodeId != standbyNodeId;
+            bool chainG = hasMonster && HasNoMonster(gNodeId) && gNodeId != standbyNodeId;
 
             partyTag.SetInteractable(
                 chainR: chainR, chainY: chainY, chainG: chainG,
@@ -181,6 +183,13 @@ namespace DnfSquad.Play.Squad
             string characterId = SquadDispatchService.GetCharacterId(Composition, color);
             string userNodeId = raidRuntimeData.FindOccupantNode(characterId);
             if (string.IsNullOrEmpty(userNodeId)) return;
+
+            // 목적지가 스탠바이노드면 거부 (2026-08-22, 18차 추가) — 대기 구역엔 몬스터가 들어오면 안 됨.
+            if (userNodeId == standbyNodeId)
+            {
+                globalWarningUI.ShowWarning("대기 노드로는 계율의 사슬을 사용할 수 없습니다");
+                return;
+            }
 
             // 목적지에 이미 몬스터가 있으면 겹치게 되므로 거부 (2026-08-22, 17차 추가) — 버튼이 정상적으로
             // 비활성화돼 있었다면 애초에 호출되지 않았겠지만, 방어적으로 한 번 더 확인한다.
