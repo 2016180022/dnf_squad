@@ -62,13 +62,19 @@ namespace DnfSquad.Play.Core
                 int hpFloor = Mathf.CeilToInt(monster.maxHp * MichaelaHpFloorRatio);
                 if (newHp < hpFloor)
                 {
+                    // 신규(26차): 이미 하한에 붙어있는 상태에서 계속 들어오는 틱(EncounterTickController 등)까지
+                    // 매번 경고를 재호출하면, 경고 자동 닫힘 타이머(3초)보다 틱 주기(1초)가 짧아서
+                    // 경고가 영원히 안 사라지는 문제가 있었다. "새로 하한에 걸리는 순간"에만 경고를 띄운다.
+                    if (state.currentHp > hpFloor)
+                    {
+                        // 신규(버그 진단 보조): globalWarningUI 인스펙터 연결이 누락된 경우 조용히 무시되지 않고
+                        // 콘솔에 남도록 함(연결이 안 돼 있어도 체력 클램프 자체는 계속 정상 동작해야 하므로 예외를 던지진 않음).
+                        if (globalWarningUI != null)
+                            globalWarningUI.ShowWarning("우리엘 또는 라파엘이 살아있을 경우에는\n미카엘라를 처치할 수 없습니다");
+                        else
+                            Debug.LogWarning("[HealthController] globalWarningUI가 연결되어 있지 않아 미카엘라 하한 경고를 표시할 수 없습니다. 인스펙터에서 연결해주세요.");
+                    }
                     newHp = hpFloor;
-                    // 신규(버그 진단 보조): globalWarningUI 인스펙터 연결이 누락된 경우 조용히 무시되지 않고
-                    // 콘솔에 남도록 함(연결이 안 돼 있어도 체력 클램프 자체는 계속 정상 동작해야 하므로 예외를 던지진 않음).
-                    if (globalWarningUI != null)
-                        globalWarningUI.ShowWarning("우리엘 또는 라파엘이 살아있을 경우에는\n미카엘라를 처치할 수 없습니다");
-                    else
-                        Debug.LogWarning("[HealthController] globalWarningUI가 연결되어 있지 않아 미카엘라 하한 경고를 표시할 수 없습니다. 인스펙터에서 연결해주세요.");
                 }
             }
 

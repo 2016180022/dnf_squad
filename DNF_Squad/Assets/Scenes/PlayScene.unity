@@ -1199,7 +1199,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 68994784}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 21730747}
+        m_TargetAssemblyTypeName: DnfSquad.Play.Raid.RaidResultController, Assembly-CSharp
+        m_MethodName: ReturnToSettingScene
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &68994784
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1431,7 +1443,6 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1005917622}
   - {fileID: 1091126264}
   - {fileID: 626030522}
   - {fileID: 993148358}
@@ -5374,6 +5385,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 76147909}
+  - {fileID: 1005917622}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -7086,12 +7098,12 @@ RectTransform:
   m_Children:
   - {fileID: 1100515023}
   - {fileID: 2133763612}
-  m_Father: {fileID: 76147909}
+  m_Father: {fileID: 703387874}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 50, y: 150}
-  m_SizeDelta: {x: -700, y: -700}
+  m_AnchoredPosition: {x: 290, y: 150}
+  m_SizeDelta: {x: -1180, y: -700}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1005917623
 MonoBehaviour:
