@@ -40,6 +40,42 @@ MonoBehaviour:
     startingNodeId: BossNode
     spawnPosition: {x: 7, y: -2, z: 0}
     patternScriptId: patternScript_michaela
+  - monsterId: Gabriel
+    monsterName: "\uD558\uB298\uC758 \uBAA9\uC18C\uB9AC \uC9C0\uBE0C\uB9B4"
+    tier: 0
+    maxHp: 100
+    mapBackgroundImageId: town_demo
+    monsterPrefabId: Gabriel
+    startingNodeId: node_5
+    spawnPosition: {x: 7, y: -2, z: 0}
+    patternScriptId: patternScript_named
+  - monsterId: Raguel
+    monsterName: "\uACF5\uC815\uC758 \uC800\uC6B8 \uB77C\uAD6C\uC5D8"
+    tier: 0
+    maxHp: 100
+    mapBackgroundImageId: town_demo
+    monsterPrefabId: Raguel
+    startingNodeId: node_6
+    spawnPosition: {x: -6, y: -1.5, z: 0}
+    patternScriptId: patternScript_named
+  - monsterId: Sariel
+    monsterName: "\uC601\uD63C\uC758 \uC548\uB0B4\uC790 \uC0AC\uB9AC\uC5D8"
+    tier: 0
+    maxHp: 100
+    mapBackgroundImageId: town_demo
+    monsterPrefabId: Sariel
+    startingNodeId: node_7
+    spawnPosition: {x: -3, y: -0.5, z: 0}
+    patternScriptId: patternScript_named
+  - monsterId: Ramiel
+    monsterName: "\uD76C\uB9DD\uC758 \uC18D\uC0AD\uC784 \uB808\uBBF8\uC5D8"
+    tier: 0
+    maxHp: 100
+    mapBackgroundImageId: town_demo
+    monsterPrefabId: Ramiel
+    startingNodeId: node_8
+    spawnPosition: {x: 7, y: -1, z: 0}
+    patternScriptId: patternScript_named
   defaultNodeBackgroundImageId: town_demo
   playerMaxHp: 100
   playerMaxMp: 100
@@ -57,8 +93,24 @@ MonoBehaviour:
       isDead: 0
     - monsterId: michaela
       currentNodeId: BossNode
+      currentHp: 60
+      isDead: 0
+    - monsterId: Gabriel
+      currentNodeId: node_5
+      currentHp: 100
+      isDead: 0
+    - monsterId: Raguel
+      currentNodeId: node_6
+      currentHp: 100
+      isDead: 0
+    - monsterId: Sariel
+      currentNodeId: node_7
+      currentHp: 100
+      isDead: 0
+    - monsterId: Ramiel
+      currentNodeId: node_8
       currentHp: 100
       isDead: 0
     playerCurrentHp: 100
     playerCurrentMp: 100
-    luminousGauge: 61
+    luminousGauge: 99
