@@ -17,7 +17,7 @@ namespace DnfSquad.UI
         {
             if (portraitImage != null)
             {
-                portraitImage.sprite = Resources.Load<Sprite>($"Image/Portrait/{character.characterId}");
+                portraitImage.sprite = Resources.Load<Sprite>($"Image/Portrait/{character.characterId}_portrait");
                 portraitImage.enabled = portraitImage.sprite != null;
             }
 

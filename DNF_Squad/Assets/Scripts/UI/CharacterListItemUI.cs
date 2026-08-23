@@ -45,7 +45,7 @@ namespace DnfSquad.UI
         {
             dragGhost = new GameObject("DragGhost", typeof(RectTransform), typeof(Image)).GetComponent<RectTransform>();
             dragGhost.SetParent(dragLayer, false);
-            dragGhost.sizeDelta = ((RectTransform)portraitImage.transform).sizeDelta;
+            dragGhost.sizeDelta = ((RectTransform)portraitImage.transform).rect.size;
 
             var dragGhostImage = dragGhost.GetComponent<Image>();
             dragGhostImage.sprite = portraitImage.sprite;

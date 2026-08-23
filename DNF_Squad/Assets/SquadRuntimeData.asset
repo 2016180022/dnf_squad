@@ -445,11 +445,11 @@ MonoBehaviour:
   raidIngredientImageId: RaidIngredient
   runtimeState:
     composition:
-      leaderCharacterId: 2026001
-      bufferCharacterId: 2026004
+      leaderCharacterId: 0
+      bufferCharacterId: 0
       memberCharacterIds:
-      - 2026002
-      - 2026008
+      - 0
+      - 0
     quickSlots:
     - slotIndex: 0
       skillId: 26001
@@ -485,4 +485,8 @@ MonoBehaviour:
     - buffId: 26102
       currentLevel: 0
     squadPoints: 1000
-  skillCooldowns: []
+  skillCooldowns:
+  - skillId: 26001
+    remainingSeconds: 2.1090379
+  - skillId: 26004
+    remainingSeconds: 0
