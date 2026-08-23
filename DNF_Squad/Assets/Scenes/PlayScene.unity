@@ -2939,6 +2939,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b212e2e7759c959468faa896eb484ddf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DnfSquad.Play.Raid.LuminousGaugeController
+  bossUnoccupiedDecayInterval: 120
+  bossUnoccupiedDecayAmount: 10
+  fixedPositionDecayInterval: 60
+  fixedPositionDecayAmount: 30
   raidRuntimeData: {fileID: 11400000, guid: 892f4a53c863886489cad6c51b9c6a60, type: 2}
   mapTransitionController: {fileID: 9106018}
   globalWarningUI: {fileID: 1005917625}

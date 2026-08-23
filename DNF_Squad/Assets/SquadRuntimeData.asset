@@ -449,7 +449,7 @@ MonoBehaviour:
       bufferCharacterId: 2026004
       memberCharacterIds:
       - 2026002
-      - 
+      - 2026008
     quickSlots:
     - slotIndex: 0
       skillId: 26001
@@ -485,8 +485,4 @@ MonoBehaviour:
     - buffId: 26102
       currentLevel: 0
     squadPoints: 1000
-  skillCooldowns:
-  - skillId: 26004
-    remainingSeconds: 7.5043716
-  - skillId: 26001
-    remainingSeconds: 26.981333
+  skillCooldowns: []

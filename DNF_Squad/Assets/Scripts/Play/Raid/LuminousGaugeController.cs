@@ -13,15 +13,16 @@ namespace DnfSquad.Play.Raid
     /// </summary>
     public class LuminousGaugeController : MonoBehaviour
     {
-        private const float BaseDecayInterval = 6f;      // 규칙 2: 6초에 1씩 감소
+        private const float BaseDecayInterval = 6f;      // 규칙 2: 6초에 1씩 감소 (그대로 유지, 인스펙터 노출 안 함)
         private const int BaseDecayAmount = 1;
 
-        // 규칙 3: 보스(우리엘/라파엘) 비점유 — 각자 독립적으로 60초마다 10 감소
-        private const float BossUnoccupiedDecayInterval = 60f;
-        private const int BossUnoccupiedDecayAmount = 10;
+        [Header("규칙 3: 보스(우리엘/라파엘) 비점유 페널티 — 인스펙터에서 조정")]
+        [SerializeField] private float bossUnoccupiedDecayInterval = 60f; // 각자 독립적으로 이 초마다
+        [SerializeField] private int bossUnoccupiedDecayAmount = 10;      // 이만큼 감소
 
-        private const float FixedPositionDecayInterval = 30f; // 규칙 4: 미카엘라 위치 고정 30초마다 30 감소
-        private const int FixedPositionDecayAmount = 30;
+        [Header("규칙 4: 미카엘라 위치 고정 페널티 — 인스펙터에서 조정")]
+        [SerializeField] private float fixedPositionDecayInterval = 30f; // 이 초마다
+        [SerializeField] private int fixedPositionDecayAmount = 30;      // 이만큼 감소
 
         [SerializeField] private RaidRuntimeData raidRuntimeData;
         [SerializeField] private MapTransitionController mapTransitionController;
@@ -35,13 +36,13 @@ namespace DnfSquad.Play.Raid
         public int CurrentLuminousGauge => raidRuntimeData.runtimeState.luminousGauge;
 
         // 미카엘라 위치 고정 카운트다운 게이지용 (30에서 시작해 1초에 1씩 줄어드는 형태로 노출)
-        public float FixedPositionCountdownMax => FixedPositionDecayInterval;
-        public float FixedPositionCountdownRemaining => Mathf.Max(0f, FixedPositionDecayInterval - fixedPositionTimer);
+        public float FixedPositionCountdownMax => fixedPositionDecayInterval;
+        public float FixedPositionCountdownRemaining => Mathf.Max(0f, fixedPositionDecayInterval - fixedPositionTimer);
 
         // 보스(우리엘/라파엘) 비점유 카운트다운 게이지용. monsterId별로 독립된 값.
-        public float BossUnoccupiedCountdownMax => BossUnoccupiedDecayInterval;
+        public float BossUnoccupiedCountdownMax => bossUnoccupiedDecayInterval;
         public float GetBossUnoccupiedCountdownRemaining(string monsterId) =>
-            Mathf.Max(0f, BossUnoccupiedDecayInterval - (bossUnoccupiedTimers.TryGetValue(monsterId, out var t) ? t : 0f));
+            Mathf.Max(0f, bossUnoccupiedDecayInterval - (bossUnoccupiedTimers.TryGetValue(monsterId, out var t) ? t : 0f));
 
         private float baseDecayTimer;
 
@@ -71,7 +72,8 @@ namespace DnfSquad.Play.Raid
             }
         }
 
-        /// <summary>규칙 3: 우리엘/라파엘 각각 — 플레이어가 그 몬스터 노드에 없는 상태(비점유)가 유지되는 동안 60초마다 10 감소</summary>
+        /// <summary>규칙 3: 우리엘/라파엘 각각 — 플레이어가 그 몬스터 노드에 없는 상태(비점유)가 유지되는 동안
+        /// bossUnoccupiedDecayInterval초마다 bossUnoccupiedDecayAmount만큼 감소 (인스펙터에서 조정 가능)</summary>
         private void TickBossUnoccupied(float dt)
         {
             var bosses = raidRuntimeData.monsters.Where(m => m.tier == MonsterTier.Boss).ToList();
@@ -94,18 +96,19 @@ namespace DnfSquad.Play.Raid
 
                 float timer = bossUnoccupiedTimers.TryGetValue(boss.monsterId, out var t) ? t : 0f;
                 timer += dt;
-                while (timer >= BossUnoccupiedDecayInterval)
+                while (timer >= bossUnoccupiedDecayInterval)
                 {
-                    timer -= BossUnoccupiedDecayInterval;
-                    DecreaseGauge(BossUnoccupiedDecayAmount);
-                    // 2026-08-22: 보스 비점유로 성광 유지율이 감소하는 순간 안내 문구 표시
-                    globalWarningUI.ShowWarning("보스 몬스터 60초 비점유 시,\\n 성광 유지율이 감소됩니다");
+                    timer -= bossUnoccupiedDecayInterval;
+                    DecreaseGauge(bossUnoccupiedDecayAmount);
+                    // 안내 문구를 하드코딩하지 않고 인스펙터 값(bossUnoccupiedDecayInterval)에 자동 동기화
+                    globalWarningUI.ShowWarning($"보스 몬스터 {bossUnoccupiedDecayInterval:0.#}초 비점유 시,\\n 성광 유지율이 감소됩니다");
                 }
                 bossUnoccupiedTimers[boss.monsterId] = timer;
             }
         }
 
-        /// <summary>규칙 4: 미카엘라 위치가 바뀌지 않는 상태가 유지되는 동안 30초마다 30 감소</summary>
+        /// <summary>규칙 4: 미카엘라 위치가 바뀌지 않는 상태가 유지되는 동안 fixedPositionDecayInterval초마다
+        /// fixedPositionDecayAmount만큼 감소 (인스펙터에서 조정 가능)</summary>
         private void TickMichaelaPositionFixed(float dt, MonsterData michaela)
         {
             if (michaela == null) { fixedPositionTimer = 0f; hasLastMichaelaNodeId = false; return; }
@@ -121,12 +124,12 @@ namespace DnfSquad.Play.Raid
             }
 
             fixedPositionTimer += dt;
-            while (fixedPositionTimer >= FixedPositionDecayInterval)
+            while (fixedPositionTimer >= fixedPositionDecayInterval)
             {
-                fixedPositionTimer -= FixedPositionDecayInterval;
-                DecreaseGauge(FixedPositionDecayAmount);
-                // 2026-08-22: 미카엘라 위치 고정으로 성광 유지율이 감소하는 순간 안내 문구 표시
-                globalWarningUI.ShowWarning("미카엘라의 위치가 30초간 고정되어 있을 경우,\\n 성광 유지율이 감소됩니다");
+                fixedPositionTimer -= fixedPositionDecayInterval;
+                DecreaseGauge(fixedPositionDecayAmount);
+                // 안내 문구를 하드코딩하지 않고 인스펙터 값(fixedPositionDecayInterval)에 자동 동기화
+                globalWarningUI.ShowWarning($"미카엘라의 위치가 {fixedPositionDecayInterval:0.#}초간 고정되어 있을 경우,\\n 성광 유지율이 감소됩니다");
             }
         }
 
