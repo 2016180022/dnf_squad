@@ -35,6 +35,9 @@ namespace DnfSquad.UI
         [SerializeField] private Button applyButton;    // 적용
         [SerializeField] private Button exitButton;     // 나가기
 
+        [Header("몬스터 안내 이미지 (연출용 — 전투 로직 없음)")]
+        [SerializeField] private UISpriteSequencePlayer michaelaAnimation; // 소환 안내용 미카엘라 이미지의 프레임 애니메이션
+
         [Header("씬 흐름")]
         [SerializeField] private GameObject skillChainCanvasRoot;
         [SerializeField] private SquadSettingCanvasController settingCanvasController;
@@ -55,6 +58,8 @@ namespace DnfSquad.UI
             RefreshLeaderSkillIcons();
             LoadFromRuntimeState();
             RefreshButtonStates();
+
+            HideMichaelaDummy(); // 소환 버튼을 누르기 전에는 항상 숨김 상태로 시작
         }
 
         /// <summary>A/S/D/F 입력 칸에 배치된 스킬 아이콘 표시</summary>
@@ -128,6 +133,8 @@ namespace DnfSquad.UI
             remainingSeconds = CycleSeconds;
             UpdateTimerText();
             RefreshButtonStates();
+
+            ShowMichaelaDummy();
         }
 
         /// <summary>제거 버튼 — 측정을 즉시 중단 (데미지 산출은 그대로 유효)</summary>
@@ -144,6 +151,24 @@ namespace DnfSquad.UI
             totalDamage = Random.Range(minMeasuredDamage, maxMeasuredDamage + 1);
             totalDamageText.text = $"총합 데미지 : {totalDamage:N0}";
             RefreshButtonStates();
+
+            HideMichaelaDummy();
+        }
+
+        /// <summary>측정용 더미(샌드백) 표시 + 애니메이션 재생</summary>
+        private void ShowMichaelaDummy()
+        {
+            if (michaelaAnimation == null) return;
+            michaelaAnimation.gameObject.SetActive(true);
+            michaelaAnimation.Play();
+        }
+
+        /// <summary>측정용 더미(샌드백) 애니메이션 정지 + 숨김</summary>
+        private void HideMichaelaDummy()
+        {
+            if (michaelaAnimation == null) return;
+            michaelaAnimation.Stop();
+            michaelaAnimation.gameObject.SetActive(false);
         }
 
         /// <summary>초기화 버튼 — 기록된 순서와 데미지를 모두 비움</summary>
@@ -171,6 +196,7 @@ namespace DnfSquad.UI
         private void CloseCanvas()
         {
             isMeasuring = false;
+            HideMichaelaDummy(); // 측정 중 나가기를 눌러도 더미가 화면에 남지 않도록 정리
             skillChainCanvasRoot.SetActive(false);
             settingCanvasController.ShowCanvas(); // 스쿼드 세팅 캔버스 재활성화 + 총합 데미지 갱신
         }
