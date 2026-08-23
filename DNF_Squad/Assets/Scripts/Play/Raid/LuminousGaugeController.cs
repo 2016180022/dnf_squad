@@ -25,7 +25,6 @@ namespace DnfSquad.Play.Raid
         [SerializeField] private int fixedPositionDecayAmount = 30;      // 이만큼 감소
 
         [SerializeField] private RaidRuntimeData raidRuntimeData;
-        [SerializeField] private MapTransitionController mapTransitionController;
         [Tooltip("보스 비점유/미카엘라 위치 고정으로 성광 유지율이 감소될 때 안내 문구를 띄우는 데 사용")]
         [SerializeField] private GlobalWarningUI globalWarningUI;
 
@@ -72,7 +71,9 @@ namespace DnfSquad.Play.Raid
             }
         }
 
-        /// <summary>규칙 3: 우리엘/라파엘 각각 — 플레이어가 그 몬스터 노드에 없는 상태(비점유)가 유지되는 동안
+        /// <summary>규칙 3: 우리엘/라파엘 각각 — 그 몬스터가 있는 노드에 스쿼드원(플레이어/리더/멤버 중 누구든) 한 명이라도
+        /// 있으면 점유로 간주해 타이머를 리셋한다. "직접 입장"이든 "계율의 사슬로 그 사람 위치로 끌려옴"이든 결과적으로
+        /// 그 노드에 occupant가 생기는 건 동일하므로, 별도 분기 없이 occupant 유무 하나로 두 경우를 함께 처리한다.
         /// bossUnoccupiedDecayInterval초마다 bossUnoccupiedDecayAmount만큼 감소 (인스펙터에서 조정 가능)</summary>
         private void TickBossUnoccupied(float dt)
         {
@@ -86,7 +87,7 @@ namespace DnfSquad.Play.Raid
             foreach (var boss in bosses)
             {
                 string bossNodeId = raidRuntimeData.GetMonsterState(boss.monsterId)?.currentNodeId;
-                bool occupied = bossNodeId != null && bossNodeId == mapTransitionController.CurrentNodeId;
+                bool occupied = bossNodeId != null && (raidRuntimeData.GetNodeState(bossNodeId)?.occupants.Count ?? 0) > 0;
 
                 if (occupied)
                 {
