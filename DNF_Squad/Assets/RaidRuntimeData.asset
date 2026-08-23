@@ -16,7 +16,7 @@ MonoBehaviour:
   - monsterId: uriel
     monsterName: "\uC9C4\uB9AC\uC758 \uBD88\uAF43 \uC6B0\uB9AC\uC5D8"
     tier: 1
-    maxHp: 100
+    maxHp: 1000000
     mapBackgroundImageId: town_demo
     monsterPrefabId: Uriel_demo
     startingNodeId: node_1
@@ -25,7 +25,7 @@ MonoBehaviour:
   - monsterId: raphael
     monsterName: "\uCE58\uC720\uC758 \uC190\uAE38 \uB77C\uD30C\uC5D8"
     tier: 1
-    maxHp: 100
+    maxHp: 1000000
     mapBackgroundImageId: town_demo
     monsterPrefabId: raphael
     startingNodeId: node_3
@@ -34,7 +34,7 @@ MonoBehaviour:
   - monsterId: michaela
     monsterName: "\uBB34\uB108\uC9C4 \uC131\uC790 \uBBF8\uCE74\uC5D8\uB77C"
     tier: 2
-    maxHp: 100
+    maxHp: 1500000
     mapBackgroundImageId: town_demo
     monsterPrefabId: michaela
     startingNodeId: BossNode
@@ -43,7 +43,7 @@ MonoBehaviour:
   - monsterId: Gabriel
     monsterName: "\uD558\uB298\uC758 \uBAA9\uC18C\uB9AC \uC9C0\uBE0C\uB9B4"
     tier: 0
-    maxHp: 100
+    maxHp: 500000
     mapBackgroundImageId: town_demo
     monsterPrefabId: Gabriel
     startingNodeId: node_5
@@ -52,7 +52,7 @@ MonoBehaviour:
   - monsterId: Raguel
     monsterName: "\uACF5\uC815\uC758 \uC800\uC6B8 \uB77C\uAD6C\uC5D8"
     tier: 0
-    maxHp: 100
+    maxHp: 500000
     mapBackgroundImageId: town_demo
     monsterPrefabId: Raguel
     startingNodeId: node_6
@@ -61,7 +61,7 @@ MonoBehaviour:
   - monsterId: Sariel
     monsterName: "\uC601\uD63C\uC758 \uC548\uB0B4\uC790 \uC0AC\uB9AC\uC5D8"
     tier: 0
-    maxHp: 100
+    maxHp: 500000
     mapBackgroundImageId: town_demo
     monsterPrefabId: Sariel
     startingNodeId: node_7
@@ -70,7 +70,7 @@ MonoBehaviour:
   - monsterId: Ramiel
     monsterName: "\uD76C\uB9DD\uC758 \uC18D\uC0AD\uC784 \uB808\uBBF8\uC5D8"
     tier: 0
-    maxHp: 100
+    maxHp: 500000
     mapBackgroundImageId: town_demo
     monsterPrefabId: Ramiel
     startingNodeId: node_8
@@ -162,6 +162,9 @@ MonoBehaviour:
   alwaysActiveNodeIds:
   - BossNode
   - StandbyNode
+  highCapacityNodeIds:
+  - StandbyNode
+  - BossNode
   runtimeState:
     nodeStates: []
     monsterStates:

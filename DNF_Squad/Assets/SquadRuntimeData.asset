@@ -464,7 +464,7 @@ MonoBehaviour:
     - slotIndex: 5
       skillId: 26006
     leaderSkillChain: []
-    leaderSkillChainTotalDamage: 92
+    leaderSkillChainTotalDamage: 100000
     buffProgress:
     - buffId: 26112
       currentLevel: 0

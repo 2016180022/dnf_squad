@@ -10,10 +10,11 @@ namespace DnfSquad.Play.Raid
     /// </summary>
     public class EncounterTickController : MonoBehaviour
     {
-        private const float TickInterval = 1f;
-        private const int MonsterDamagePerTick = 1;
-        private const int PlayerHpLossPerTick = 1;
-        private const int PlayerMpLossPerTick = 1;
+        [Header("조우 틱 — 인스펙터에서 조정")]
+        [SerializeField] private float tickIntervalSeconds = 1f;       // 이 초마다
+        [SerializeField] private int monsterDamagePerTick = 1;         // 몬스터 체력 감소량(=플레이어 공격력 대역)
+        [SerializeField] private int playerHpLossPerTick = 1;          // 플레이어 체력 감소량
+        [SerializeField] private int playerMpLossPerTick = 1;          // 플레이어 마나 감소량
 
         [SerializeField] private HealthController healthController;
         [SerializeField] private MonsterSpawnController monsterSpawnController;
@@ -30,12 +31,12 @@ namespace DnfSquad.Play.Raid
             }
 
             tickTimer += Time.deltaTime;
-            while (tickTimer >= TickInterval)
+            while (tickTimer >= tickIntervalSeconds)
             {
-                tickTimer -= TickInterval;
-                healthController.DamageMonster(monsterId, MonsterDamagePerTick);
-                healthController.DamagePlayer(PlayerHpLossPerTick);
-                healthController.ChangePlayerMp(-PlayerMpLossPerTick);
+                tickTimer -= tickIntervalSeconds;
+                healthController.DamageMonster(monsterId, monsterDamagePerTick);
+                healthController.DamagePlayer(playerHpLossPerTick);
+                healthController.ChangePlayerMp(-playerMpLossPerTick);
             }
         }
     }

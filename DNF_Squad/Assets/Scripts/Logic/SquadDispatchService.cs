@@ -30,7 +30,9 @@ namespace DnfSquad.Logic
             }
         }
 
-        /// <summary>자동 딜링 — 1초당 데미지(장비점수 기반). 테스트 후 계수(1/100000) 조정 예정, 1초 주기 자체는 고정.</summary>
-        public static float GetAutoDamagePerSecond(int gearScore) => gearScore / 100000f;
+        /// <summary>자동 딜링 — 1초당 데미지(장비점수 기반). 계수는 호출부(SquadController)의 인스펙터 필드에서
+        /// 받아온다 — 이 메서드는 순수 계산만 담당(1초 주기 자체는 고정).</summary>
+        public static float GetAutoDamagePerSecond(int gearScore, float gearScoreToDamageCoefficient) =>
+            gearScore / gearScoreToDamageCoefficient;
     }
 }

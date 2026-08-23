@@ -34,6 +34,7 @@ namespace DnfSquad.Play.Squad
 
         [Header("자동 딜링")]
         [SerializeField] private float autoDamageTickIntervalSeconds = 1f;
+        [SerializeField] private float gearScoreToDamageCoefficient = 100000f; // 장비점수 → 초당 데미지 환산 계수
 
         private string lastSelectedNodeId;
         private float autoDamageTimer;
@@ -261,7 +262,7 @@ namespace DnfSquad.Play.Squad
             var character = squadRuntimeData.GetCharacter(characterId);
             if (character == null) return;
 
-            float damagePerSecond = SquadDispatchService.GetAutoDamagePerSecond(character.gearScore);
+            float damagePerSecond = SquadDispatchService.GetAutoDamagePerSecond(character.gearScore, gearScoreToDamageCoefficient);
 
             pendingDamage.TryGetValue(characterId, out float accumulated);
             accumulated += damagePerSecond * autoDamageTickIntervalSeconds;

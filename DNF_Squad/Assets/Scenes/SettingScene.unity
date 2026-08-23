@@ -10974,6 +10974,8 @@ MonoBehaviour:
   - {fileID: 1638344365}
   timerText: {fileID: 1125472558}
   totalDamageText: {fileID: 5384832759475176188}
+  minMeasuredDamage: 90000
+  maxMeasuredDamage: 110000
   summonButton: {fileID: 994425145}
   removeButton: {fileID: 754923633}
   resetButton: {fileID: 278964873774173839}

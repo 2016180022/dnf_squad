@@ -24,6 +24,10 @@ namespace DnfSquad.UI
         [SerializeField] private TMP_Text timerText;
         [SerializeField] private TMP_Text totalDamageText;
 
+        [Header("스킬 체인 측정 데미지 — 랜덤 범위 (프로토타입 스텁, 추후 실제 계산식으로 대체 예정)")]
+        [SerializeField] private int minMeasuredDamage = 1;
+        [SerializeField] private int maxMeasuredDamage = 10_000_000;
+
         [Header("버튼")]
         [SerializeField] private Button summonButton;   // 소환
         [SerializeField] private Button removeButton;   // 제거
@@ -136,7 +140,8 @@ namespace DnfSquad.UI
         private void StopMeasuring()
         {
             isMeasuring = false;
-            totalDamage = Random.Range(1, 10_000_001); // 1 ~ 10,000,000
+            // Random.Range(int,int)의 상한은 exclusive라서 +1 — 인스펙터에는 "포함" 범위(최소~최대)로 노출.
+            totalDamage = Random.Range(minMeasuredDamage, maxMeasuredDamage + 1);
             totalDamageText.text = $"총합 데미지 : {totalDamage:N0}";
             RefreshButtonStates();
         }

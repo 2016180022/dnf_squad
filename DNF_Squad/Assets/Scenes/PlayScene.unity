@@ -1726,6 +1726,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0ee0df3d49fa3f469cc9dcdf4e359b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DnfSquad.Play.Raid.EncounterTickController
+  tickIntervalSeconds: 1
+  monsterDamagePerTick: 10000
+  playerHpLossPerTick: 1
+  playerMpLossPerTick: 1
   healthController: {fileID: 1889746797}
   monsterSpawnController: {fileID: 314657538}
 --- !u!1 &146647918
@@ -2944,7 +2948,6 @@ MonoBehaviour:
   fixedPositionDecayInterval: 60
   fixedPositionDecayAmount: 30
   raidRuntimeData: {fileID: 11400000, guid: 892f4a53c863886489cad6c51b9c6a60, type: 2}
-  mapTransitionController: {fileID: 9106018}
   globalWarningUI: {fileID: 1005917625}
 --- !u!1 &444148002
 GameObject:
@@ -8173,6 +8176,7 @@ MonoBehaviour:
   standbyNodeId: StandbyNode
   statusPanel: {fileID: 1091126268}
   autoDamageTickIntervalSeconds: 1
+  gearScoreToDamageCoefficient: 10
 --- !u!1 &1237270072
 GameObject:
   m_ObjectHideFlags: 0
